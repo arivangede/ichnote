@@ -1,0 +1,15 @@
+[package]
+name = "ichnote-sync"
+description = "Sync engine and transports for Ichnote"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[dependencies]
+ichnote-core.workspace = true
+thiserror.workspace = true
+
+[lints]
+workspace = true
