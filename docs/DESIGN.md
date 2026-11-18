@@ -1,6 +1,6 @@
 # Ichnote — Dokumen Desain & Panduan Build
 
-> **Status:** Draft v0.2 · **Nama:** Ichnote — *leave a trace.*
+> **Status:** Draft v0.3 · **Nama:** Ichnote — *leave a trace.*
 > Aplikasi pencatatan ringan ala Notion, local-first, open-source, dibangun dengan Rust + Tauri, dengan jendela cepat *always-on-top* dan sinkronisasi lewat folder lokal.
 
 ---
@@ -100,7 +100,13 @@ Ichnote adalah aplikasi catatan desktop yang:
 
 ```
 ichnote/
-├── Cargo.toml                 # Cargo workspace
+├── Cargo.toml                 # Cargo workspace (+ Cargo.lock)
+├── rust-toolchain.toml        # toolchain stable + rustfmt/clippy
+├── clippy.toml
+├── package.json               # pnpm workspace root (skrip tauri/lint/typecheck/test)
+├── pnpm-workspace.yaml
+├── biome.json                 # lint + format frontend
+├── .github/workflows/ci.yml
 ├── crates/
 │   ├── ichnote-core/          # model data, SQLite, migrasi, dokumen yrs
 │   │   └── src/
@@ -123,7 +129,8 @@ ichnote/
 │           └── status.rs
 ├── apps/
 │   └── desktop/
-│       ├── src-tauri/         # Rust: commands, window, shortcut, tray
+│       ├── package.json       # @ichnote/desktop
+│       ├── src-tauri/         # Rust (crate ichnote-desktop): commands, window, shortcut, tray
 │       └── src/               # React: main window + quick window
 │           ├── main/
 │           ├── quick/
@@ -131,7 +138,9 @@ ichnote/
 ├── docs/
 │   ├── sync-format.md         # spesifikasi format file (publik)
 │   └── adr/                   # Architecture Decision Records
-├── LICENSE
+├── LICENSE-MIT
+├── LICENSE-APACHE
+├── README.md
 └── CONTRIBUTING.md
 ```
 
@@ -161,7 +170,7 @@ Menghapus catatan = mengisi `deleted_at` (tombstone), bukan menghapus entri. Ini
 
 ### 5.2 Skema SQLite
 
-Lokasi: direktori data aplikasi per OS (`~/Library/Application Support/Ichnote/` di macOS, `%APPDATA%\Ichnote\` di Windows).
+Lokasi: direktori data aplikasi per OS (`~/Library/Application Support/Ichnote/` di macOS, `%APPDATA%\Ichnote\` di Windows). Variabel lingkungan `ICHNOTE_DATA_DIR` menimpa lokasi ini; di build dev, cek single-instance dimatikan agar dua instans dengan data dir berbeda bisa berjalan berdampingan untuk menguji sinkronisasi folder di satu mesin.
 
 ```sql
 PRAGMA journal_mode = WAL;
@@ -300,6 +309,8 @@ CREATE TABLE devices (
 }
 ```
 
+> `macOSPrivateApi` juga membutuhkan feature Cargo `macos-private-api` pada crate `tauri`.
+>
 > `macOSPrivateApi` diperlukan untuk jendela transparan di macOS, tetapi tidak diizinkan di Mac App Store. Untuk v1 distribusi langsung (DMG ber-notarisasi) sehingga aman dipakai.
 
 ### 6.3 Pintasan global (Rust)
@@ -339,6 +350,8 @@ pub fn run() {
         .expect("gagal menjalankan Ichnote");
 }
 ```
+
+> Snippet ilustratif. Kode sebenarnya mengikuti konvensi proyek: `run()` mengembalikan `anyhow::Result` (tanpa `expect`), pesan dalam bahasa Inggris.
 
 > Jika ingin perilaku persis seperti Spotlight di atas aplikasi fullscreen macOS, pertimbangkan plugin komunitas yang mengubah jendela menjadi `NSPanel`. Evaluasi setelah v1 berjalan.
 
@@ -461,6 +474,8 @@ pub trait SyncTransport: Send + Sync {
 }
 ```
 
+> **Pertanyaan terbuka (Fase 3):** async fn di trait sudah stabil di Rust, tetapi trait ini dipakai sebagai `dyn SyncTransport`, yang belum didukung oleh async fn bawaan. Putuskan antara `async_trait`, `trait-variant`, atau generic, lalu catat sebagai ADR.
+
 `FolderTransport` adalah implementasi pertama. Transport lain (LAN, Google Drive API, PocketBase, layanan berbayar) mengimplementasikan trait yang sama.
 
 ### 7.5 Alur tulis
@@ -546,9 +561,9 @@ Ikon kecil di sidebar dan jendela cepat: *Tersinkron*, *Menyinkron…*, *Menungg
 
 ### Fase 0 — Fondasi
 - [ ] Amankan nama: organisasi GitHub, domain, crates.io/npm
-- [ ] Cargo workspace + aplikasi Tauri v2 + React/Vite
+- [x] Cargo workspace + aplikasi Tauri v2 + React/Vite
 - [ ] CI (GitHub Actions): `cargo fmt --check`, `cargo clippy -D warnings`, `cargo test`, lint & typecheck frontend, build macOS
-- [ ] Pilih lisensi, `CONTRIBUTING.md`, keputusan CLA (lihat bagian 12)
+- [x] Pilih lisensi, `CONTRIBUTING.md`, keputusan CLA (lihat bagian 12) — MIT OR Apache-2.0 + DCO, lihat `docs/adr/0002`
 
 ### Fase 1 — Aplikasi lokal
 - [ ] Migrasi SQLite + `device_id`
@@ -622,6 +637,7 @@ Ikon kecil di sidebar dan jendela cepat: *Tersinkron*, *Menyinkron…*, *Menungg
   - *AGPL-3.0* — pihak yang menjalankan versi modifikasi sebagai layanan wajib membuka kodenya.
   - Banyak proyek: klien MIT/Apache, server AGPL atau tertutup.
 - **CLA/DCO:** jika ingin tetap bisa melisensikan ulang (mis. dual licensing), pasang CLA sejak kontribusi eksternal pertama.
+- **Keputusan (2026-11-19):** aplikasi, crate, dan format sinkron berlisensi **MIT OR Apache-2.0**; kontribusi memakai **DCO** (`git commit -s`), tanpa CLA. Detail di `docs/adr/0002-license-and-contributions.md`.
 - **Janji ke pengguna:** format data terbuka dan terdokumentasi; pengguna selalu bisa kembali ke sinkronisasi folder gratis.
 
 ---
