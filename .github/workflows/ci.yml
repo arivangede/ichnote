@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  rust:
+    name: Rust (fmt, clippy, test)
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: Swatinem/rust-cache@v2
+      - name: Build frontend (needed by tauri::generate_context!)
+        uses: ./.github/actions/setup-frontend
+      - run: pnpm build
+      - run: cargo fmt --all --check
+      - run: cargo clippy --workspace --all-targets -- -D warnings
+      - run: cargo test --workspace
+      - name: Core crates must not depend on Tauri
+        run: |
+          if cargo tree -p ichnote-core -p ichnote-sync -e normal,build --prefix none | grep -i '^tauri'; then
+            echo "::error::ichnote-core / ichnote-sync must not depend on Tauri"
+            exit 1
+          fi
+
+  frontend:
+    name: Frontend (lint, typecheck, test)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: ./.github/actions/setup-frontend
+      - run: pnpm lint
+      - run: pnpm typecheck
+      - run: pnpm test
+
+  build-macos:
+    name: Build macOS app (unsigned)
+    runs-on: macos-latest
+    needs: [rust, frontend]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - uses: ./.github/actions/setup-frontend
+      - run: pnpm tauri build --bundles app,dmg
+      - uses: actions/upload-artifact@v7
+        with:
+          name: ichnote-macos
+          path: |
+            target/release/bundle/macos/*.app
+            target/release/bundle/dmg/*.dmg
+          if-no-files-found: error
