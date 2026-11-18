@@ -1,0 +1,24 @@
+:root {
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: light dark;
+}
+
+body {
+  margin: 0;
+}
+
+.placeholder {
+  display: grid;
+  place-content: center;
+  min-height: 100vh;
+  text-align: center;
+}
+
+.placeholder h1 {
+  margin: 0;
+}
+
+.version {
+  opacity: 0.6;
+  font-size: 0.875rem;
+}

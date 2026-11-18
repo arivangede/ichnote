@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["crates/*"]
+members = ["crates/*", "apps/desktop/src-tauri"]
 
 [workspace.package]
 version = "0.1.0"
@@ -11,11 +11,23 @@ authors = ["Ichnote contributors"]
 
 [workspace.dependencies]
 ichnote-core = { path = "crates/ichnote-core" }
-ichnote-sync = { path = "crates/ichnote-sync" }
+anyhow = "1.0.104"
+tauri = { version = "2.12.7", features = [] }
+tauri-build = { version = "2.7.6", features = [] }
 thiserror = "2.0.21"
+tracing = "0.1.44"
+tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
 
 [workspace.lints.rust]
 unsafe_code = "forbid"
 
 [workspace.lints.clippy]
 unwrap_used = "deny"
+
+# Size optimizations for release builds (https://tauri.app/concept/size/).
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = 3
+panic = "abort"
+strip = true

@@ -1,0 +1,16 @@
+{
+  "name": "ichnote",
+  "private": true,
+  "license": "MIT OR Apache-2.0",
+  "scripts": {
+    "tauri": "pnpm --filter @ichnote/desktop tauri",
+    "dev": "pnpm --filter @ichnote/desktop dev",
+    "build": "pnpm --filter @ichnote/desktop build",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test"
+  },
+  "packageManager": "pnpm@11.18.0",
+  "engines": {
+    "node": ">=22"
+  }
+}
