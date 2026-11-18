@@ -1,0 +1,19 @@
+# Rust
+/target/
+
+# Node / frontend
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Tauri generated
+apps/desktop/src-tauri/gen/schemas/
+
+# OS / editors
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Logs
+*.log
