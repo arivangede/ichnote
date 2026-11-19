@@ -1,5 +1,6 @@
 //! Application layer of Ichnote: Tauri setup, commands, windows.
 
+mod attachments;
 mod commands;
 mod data_dir;
 mod state;
@@ -22,6 +23,7 @@ pub fn run() -> anyhow::Result<()> {
 
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
+        .register_uri_scheme_protocol(attachments::SCHEME, attachments::handle)
         .setup(move |app| {
             app.manage(state::AppState::open(&data_dir)?);
             Ok(())
@@ -45,6 +47,8 @@ pub fn run() -> anyhow::Result<()> {
             commands::search,
             commands::get_settings,
             commands::set_setting,
+            commands::save_attachment,
+            commands::get_attachments,
             commands::write_export_files,
         ])
         .run(tauri::generate_context!())

@@ -4,8 +4,8 @@ use std::collections::BTreeMap;
 use std::path::PathBuf;
 
 use ichnote_core::export::ExportFile;
-use ichnote_core::{Folder, NoteFilter, NoteMeta, NotePatch, SearchHit, Workspace};
-use serde::Serialize;
+use ichnote_core::{Attachment, Folder, NoteFilter, NoteMeta, NotePatch, SearchHit, Workspace};
+use serde::{Deserialize, Serialize};
 use tauri::ipc::{InvokeBody, Request, Response};
 use tauri::{AppHandle, Emitter, State};
 use uuid::Uuid;
@@ -17,6 +17,12 @@ pub const DOC_ID_HEADER: &str = "ichnote-doc-id";
 /// Settings that the frontend may not change.
 const READ_ONLY_SETTINGS: &[&str] = &[ichnote_core::db::DEVICE_ID_KEY];
 const DEFAULT_SEARCH_LIMIT: u32 = 50;
+/// Headers of a binary `save_attachment` request.
+pub const WORKSPACE_ID_HEADER: &str = "ichnote-workspace-id";
+pub const FILE_NAME_HEADER: &str = "ichnote-file-name";
+pub const MIME_HEADER: &str = "ichnote-mime";
+/// Largest attachment accepted (bytes).
+const MAX_ATTACHMENT_BYTES: usize = 256 * 1024 * 1024;
 
 /// Error returned to the frontend as `{ message }`.
 #[derive(Debug, Serialize)]
@@ -242,10 +248,77 @@ pub async fn set_setting(state: State<'_, AppState>, key: String, value: String)
     Ok(state.store().set_setting(&key, &value)?)
 }
 
-/// Writes exported files under `dir`. Returns the number of files written.
+fn header<'a>(request: &'a Request<'_>, name: &str) -> CmdResult<&'a str> {
+    request
+        .headers()
+        .get(name)
+        .and_then(|v| v.to_str().ok())
+        .ok_or_else(|| CommandError::from(format!("missing {name} header")))
+}
+
+/// Stores a file inserted into a note. The body is the raw file; metadata is in headers
+/// (the file name is `encodeURIComponent`-encoded).
 #[tauri::command]
-pub async fn write_export_files(dir: PathBuf, files: Vec<ExportFile>) -> CmdResult<usize> {
+pub async fn save_attachment(
+    state: State<'_, AppState>,
+    request: Request<'_>,
+) -> CmdResult<Attachment> {
+    let InvokeBody::Raw(bytes) = request.body() else {
+        return Err(CommandError::from("expected a binary request body"));
+    };
+    if bytes.len() > MAX_ATTACHMENT_BYTES {
+        return Err(CommandError::from(format!(
+            "file is too large (limit {} MB)",
+            MAX_ATTACHMENT_BYTES / 1024 / 1024
+        )));
+    }
+    let workspace_id = Uuid::parse_str(header(&request, WORKSPACE_ID_HEADER)?)?;
+    let name = crate::attachments::percent_decode(header(&request, FILE_NAME_HEADER)?)
+        .ok_or_else(|| CommandError::from("invalid file name encoding"))?;
+    let mime = header(&request, MIME_HEADER).unwrap_or("application/octet-stream");
+    Ok(state
+        .store()
+        .save_attachment(workspace_id, &name, mime, bytes)?)
+}
+
+/// Metadata of attachments (for export).
+#[tauri::command]
+pub async fn get_attachments(
+    state: State<'_, AppState>,
+    ids: Vec<Uuid>,
+) -> CmdResult<Vec<Attachment>> {
+    let store = state.store();
+    ids.into_iter()
+        .map(|id| Ok(store.attachment(id)?.0))
+        .collect()
+}
+
+/// An attachment to copy into an export, at a relative path.
+#[derive(Debug, Deserialize)]
+pub struct ExportAttachment {
+    id: Uuid,
+    path: String,
+}
+
+/// Writes exported files under `dir`, plus copies of the referenced attachments.
+/// Returns the number of note files written.
+#[tauri::command]
+pub async fn write_export_files(
+    state: State<'_, AppState>,
+    dir: PathBuf,
+    files: Vec<ExportFile>,
+    attachments: Option<Vec<ExportAttachment>>,
+) -> CmdResult<usize> {
+    let copies = {
+        let store = state.store();
+        attachments
+            .unwrap_or_default()
+            .into_iter()
+            .map(|a| Ok((a.path, store.attachment(a.id)?.1)))
+            .collect::<CmdResult<Vec<_>>>()?
+    };
     let written = tauri::async_runtime::spawn_blocking(move || {
+        ichnote_core::export::copy_files(&dir, &copies)?;
         ichnote_core::export::write_files(&dir, &files)
     })
     .await??;

@@ -1,7 +1,7 @@
 //! Local SQLite storage: opening, migrations, settings, and device identity.
 
 use std::collections::BTreeMap;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use rusqlite::{Connection, OptionalExtension, params};
 use uuid::Uuid;
@@ -13,7 +13,10 @@ use crate::ids::new_id;
 /// Schema migrations, applied in order. Index `i` brings the schema to `user_version = i + 1`.
 ///
 /// Never edit a migration that has shipped; append a new one instead.
-const MIGRATIONS: &[&str] = &[include_str!("migrations/0001_init.sql")];
+const MIGRATIONS: &[&str] = &[
+    include_str!("migrations/0001_init.sql"),
+    include_str!("migrations/0002_attachments.sql"),
+];
 
 /// Settings key holding this device's UUIDv7.
 pub const DEVICE_ID_KEY: &str = "device_id";
@@ -27,6 +30,8 @@ pub struct Store {
     device_id: Uuid,
     /// yrs client ID for edits made by Rust in this session (fresh per session, never reused).
     client_id: ClientID,
+    /// Where attachment files live (`<db dir>/attachments`). `None` for in-memory stores.
+    pub(crate) attachments_dir: Option<PathBuf>,
 }
 
 impl Store {
@@ -35,7 +40,14 @@ impl Store {
     /// # Errors
     /// Fails if the file cannot be opened, a migration fails, or the schema is newer than this build.
     pub fn open(path: impl AsRef<Path>) -> Result<Self> {
-        Self::init(Connection::open(path)?)
+        let path = path.as_ref();
+        let mut store = Self::init(Connection::open(path)?)?;
+        store.attachments_dir = Some(
+            path.parent()
+                .unwrap_or_else(|| Path::new("."))
+                .join("attachments"),
+        );
+        Ok(store)
     }
 
     /// Opens a fresh in-memory database. Intended for tests.
@@ -59,6 +71,7 @@ impl Store {
             conn,
             device_id,
             client_id,
+            attachments_dir: None,
         })
     }
 

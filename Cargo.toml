@@ -12,6 +12,7 @@ authors = ["Ichnote contributors"]
 [workspace.dependencies]
 ichnote-core = { path = "crates/ichnote-core" }
 anyhow = "1.0.104"
+blake3 = "1.8.7"
 dirs = "7.0.0"
 serde = { version = "1.0.229", features = ["derive"] }
 serde_json = "1.0.154"

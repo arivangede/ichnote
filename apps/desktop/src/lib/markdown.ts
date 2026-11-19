@@ -3,7 +3,8 @@
 import { BlockNoteEditor } from "@blocknote/core";
 import { yXmlFragmentToBlocks } from "@blocknote/core/yjs";
 import * as Y from "yjs";
-import type { ExportFile, Folder, NoteMeta } from "./ipc";
+import { attachmentExportName, rewriteAttachmentLinks } from "./attachments";
+import type { Attachment, ExportAttachment, ExportFile, Folder, NoteMeta } from "./ipc";
 import { NOTE_FRAGMENT } from "./noteSync";
 
 let headless: BlockNoteEditor | null = null;
@@ -58,4 +59,27 @@ export function workspaceExportFiles(
         contents: noteToMarkdown(n.title, states.get(n.id) ?? new Uint8Array()),
       };
     });
+}
+
+/**
+ * Points attachment links in exported files at copies under `<root>/attachments/`, with links
+ * relative to each file. `root` is the export's top-level directory ("" for a single note).
+ */
+export function linkAttachments(
+  files: ExportFile[],
+  attachments: Attachment[],
+  root: string,
+): { files: ExportFile[]; copies: ExportAttachment[] } {
+  const names = new Map(attachments.map((a) => [a.id, attachmentExportName(a)]));
+  const base = root ? `${root}/` : "";
+  const linked = files.map((f) => {
+    const depth = f.path.split("/").length - 1 - (root ? 1 : 0);
+    const prefix = `${"../".repeat(depth)}attachments/`;
+    return { ...f, contents: rewriteAttachmentLinks(f.contents, names, prefix) };
+  });
+  const copies = attachments.map((a) => ({
+    id: a.id,
+    path: `${base}attachments/${names.get(a.id)}`,
+  }));
+  return { files: linked, copies };
 }

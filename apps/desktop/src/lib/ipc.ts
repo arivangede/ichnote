@@ -63,6 +63,22 @@ export interface SearchHit {
 export const HIGHLIGHT_START = "\u0002";
 export const HIGHLIGHT_END = "\u0003";
 
+export interface Attachment {
+  id: Uuid;
+  workspaceId: Uuid;
+  hash: string;
+  name: string;
+  mime: string;
+  size: number;
+  createdAt: number;
+}
+
+export interface ExportAttachment {
+  id: Uuid;
+  /** Relative target path with `/` separators. */
+  path: string;
+}
+
 export interface ExportFile {
   /** Relative path with `/` separators. */
   path: string;
@@ -152,9 +168,30 @@ export function setSetting(key: string, value: string): Promise<void> {
   return invoke<void>("set_setting", { key, value });
 }
 
-/** Writes files under an absolute directory; returns how many were written. */
-export function writeExportFiles(dir: string, files: ExportFile[]): Promise<number> {
-  return invoke<number>("write_export_files", { dir, files });
+/** Writes files (and copies of attachments) under an absolute directory; returns how many
+ * note files were written. */
+export function writeExportFiles(
+  dir: string,
+  files: ExportFile[],
+  attachments: ExportAttachment[] = [],
+): Promise<number> {
+  return invoke<number>("write_export_files", { dir, files, attachments });
+}
+
+/** Stores a file inserted into a note; the contents travel as a raw binary body. */
+export async function saveAttachment(workspaceId: Uuid, file: File): Promise<Attachment> {
+  const bytes = new Uint8Array(await file.arrayBuffer());
+  return invoke<Attachment>("save_attachment", bytes, {
+    headers: {
+      "ichnote-workspace-id": workspaceId,
+      "ichnote-file-name": encodeURIComponent(file.name),
+      "ichnote-mime": file.type || "application/octet-stream",
+    },
+  });
+}
+
+export function getAttachments(ids: Uuid[]): Promise<Attachment[]> {
+  return invoke<Attachment[]>("get_attachments", { ids });
 }
 
 export function onNotesChanged(

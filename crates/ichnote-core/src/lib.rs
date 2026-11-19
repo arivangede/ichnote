@@ -2,6 +2,7 @@
 //!
 //! This crate must not depend on Tauri so it can be tested on its own.
 
+pub mod attachments;
 pub mod backup;
 pub mod db;
 pub mod docs;
@@ -13,6 +14,7 @@ pub mod meta;
 pub mod notes;
 pub mod search;
 
+pub use attachments::Attachment;
 pub use db::Store;
 pub use docs::DocKind;
 pub use error::{Error, Result};

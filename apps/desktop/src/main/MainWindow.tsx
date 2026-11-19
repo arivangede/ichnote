@@ -2,12 +2,14 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import { open, save } from "@tauri-apps/plugin-dialog";
 import { Download, List, PanelLeft } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { referencedAttachments } from "../lib/attachments";
 import {
   createFolder,
   createNote,
   deleteFolder,
   deleteNote,
   type Folder,
+  getAttachments,
   getNote,
   getSettings,
   listFolders,
@@ -28,7 +30,13 @@ import {
   type Workspace,
   writeExportFiles,
 } from "../lib/ipc";
-import { markdownFileName, noteToMarkdown, splitPath, workspaceExportFiles } from "../lib/markdown";
+import {
+  linkAttachments,
+  markdownFileName,
+  noteToMarkdown,
+  splitPath,
+  workspaceExportFiles,
+} from "../lib/markdown";
 import { flushAll } from "../lib/pendingWrites";
 import { NoteEditor } from "./NoteEditor";
 import { NoteList } from "./NoteList";
@@ -278,7 +286,13 @@ export function MainWindow() {
       if (!path) return;
       const contents = noteToMarkdown(selected.title, await loadDoc(selected.id));
       const { dir, name } = splitPath(path);
-      await writeExportFiles(dir, [{ path: name, contents }]);
+      const ids = referencedAttachments(contents);
+      const linked = linkAttachments(
+        [{ path: name, contents }],
+        ids.length > 0 ? await getAttachments(ids) : [],
+        "",
+      );
+      await writeExportFiles(dir, linked.files, linked.copies);
       report(`Exported to ${name}.`);
     } catch (err) {
       fail(err);
@@ -296,7 +310,10 @@ export function MainWindow() {
       for (const n of all) states.set(n.id, await loadDoc(n.id));
       const day = new Date().toISOString().slice(0, 10);
       const root = `Ichnote export ${day}`;
-      const count = await writeExportFiles(dir, workspaceExportFiles(all, folders, states, root));
+      const files = workspaceExportFiles(all, folders, states, root);
+      const ids = referencedAttachments(files.map((f) => f.contents).join("\n"));
+      const linked = linkAttachments(files, ids.length > 0 ? await getAttachments(ids) : [], root);
+      const count = await writeExportFiles(dir, linked.files, linked.copies);
       report(`Exported ${count === 1 ? "1 note" : `${count} notes`} to “${root}”.`);
     } catch (err) {
       fail(err);

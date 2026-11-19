@@ -24,11 +24,12 @@
           "y": 18
         },
         "minWidth": 640,
-        "minHeight": 420
+        "minHeight": 420,
+        "dragDropEnabled": false
       }
     ],
     "security": {
-      "csp": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: asset:; connect-src ipc: http://ipc.localhost"
+      "csp": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: asset: ichn: http://ichn.localhost; media-src 'self' blob: ichn: http://ichn.localhost; connect-src ipc: http://ipc.localhost ichn: http://ichn.localhost"
     }
   },
   "bundle": {

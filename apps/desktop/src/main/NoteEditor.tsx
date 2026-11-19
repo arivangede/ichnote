@@ -5,7 +5,15 @@ import { BlockNoteView, type Theme } from "@blocknote/mantine";
 import { useCreateBlockNote } from "@blocknote/react";
 import { Inbox, Pin, RotateCcw, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { type Folder, type NoteMeta, type NotePatch, updateNoteMeta } from "../lib/ipc";
+import { attachmentUrl, resolveFileUrl } from "../lib/attachments";
+import {
+  type Folder,
+  type NoteMeta,
+  type NotePatch,
+  saveAttachment,
+  type Uuid,
+  updateNoteMeta,
+} from "../lib/ipc";
 import { NoteSync, type SaveState } from "../lib/noteSync";
 import { registerFlush } from "../lib/pendingWrites";
 import { RegMark } from "./RegMark";
@@ -173,7 +181,13 @@ export function NoteEditor(props: NoteEditorProps) {
               This note could not be opened: {loadError}
             </p>
           ) : sync ? (
-            <BlockEditor sync={sync} editable={!trashed} editorRef={editorRef} />
+            <BlockEditor
+              sync={sync}
+              editable={!trashed}
+              editorRef={editorRef}
+              workspaceId={note.workspaceId}
+              onError={onError}
+            />
           ) : null}
         </div>
       </div>
@@ -263,15 +277,28 @@ function BlockEditor(props: {
   sync: NoteSync;
   editable: boolean;
   editorRef: React.RefObject<BlockNoteEditor | null>;
+  workspaceId: Uuid;
+  onError: (message: string) => void;
 }) {
+  const { workspaceId, onError } = props;
   const editor = useCreateBlockNote(
     withCollaboration({
       collaboration: {
         fragment: props.sync.fragment,
         user: { name: "Me", color: "#4b55c4" },
       },
+      // Files (pasted, dropped, or picked) are stored locally and referenced by a stable URL.
+      uploadFile: async (file: File) => {
+        try {
+          return attachmentUrl((await saveAttachment(workspaceId, file)).id);
+        } catch (err) {
+          onError(`Could not add ${file.name}: ${errorMessage(err)}`);
+          throw err;
+        }
+      },
+      resolveFileUrl: (url: string) => resolveFileUrl(url),
     }),
-    [props.sync],
+    [props.sync, workspaceId, onError],
   );
   props.editorRef.current = editor;
   return (

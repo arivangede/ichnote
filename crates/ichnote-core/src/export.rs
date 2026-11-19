@@ -120,6 +120,30 @@ pub fn write_files(dir: &Path, files: &[ExportFile]) -> Result<Vec<PathBuf>> {
     Ok(written)
 }
 
+/// Copies existing files (e.g. attachments) under `dir`, each atomically. `files` pairs a
+/// `/`-separated relative target path with the source file. Returns the written paths.
+///
+/// # Errors
+/// Fails if `dir` is not absolute or on an I/O error.
+pub fn copy_files(dir: &Path, files: &[(String, PathBuf)]) -> Result<Vec<PathBuf>> {
+    if !dir.is_absolute() {
+        return Err(Error::Io(std::io::Error::new(
+            std::io::ErrorKind::InvalidInput,
+            "export directory must be absolute",
+        )));
+    }
+    let mut written = Vec::with_capacity(files.len());
+    for (rel, src) in files {
+        let target = dir.join(safe_relative_path(rel));
+        if let Some(parent) = target.parent() {
+            fs::create_dir_all(parent)?;
+        }
+        write_atomic(&target, &fs::read(src)?)?;
+        written.push(target);
+    }
+    Ok(written)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -161,6 +185,17 @@ mod tests {
         assert_eq!(fs::read_to_string(&written[1]).unwrap(), "# B");
         assert!(written.iter().all(|p| p.exists()));
         assert!(!dir.path().join("Work/Plan.md.tmp").exists());
+    }
+
+    #[test]
+    fn copies_files_inside_dir() {
+        let dir = tempfile::tempdir().unwrap();
+        let src = dir.path().join("src.bin");
+        fs::write(&src, b"blob").unwrap();
+        let out = dir.path().join("out");
+        let written = copy_files(&out, &[("attachments/a b.png".into(), src)]).unwrap();
+        assert_eq!(written[0], out.join("attachments/a b.png"));
+        assert_eq!(fs::read(&written[0]).unwrap(), b"blob");
     }
 
     #[test]
