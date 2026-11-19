@@ -47,7 +47,10 @@ Use the latest stable versions when adding dependencies and record them in lockf
 cargo test --workspace
 cargo clippy --all-targets -- -D warnings
 pnpm install
+pnpm lint && pnpm typecheck && pnpm test   # frontend checks (biome, tsc, vitest)
 pnpm tauri dev          # run the desktop app
+ICHNOTE_DATA_DIR=/tmp/ichnote-a pnpm tauri dev   # run against a throwaway data dir
+node apps/desktop/scripts/make-fixture.mjs        # regenerate the BlockNote Yjs fixture (run from apps/desktop)
 ```
 
 ## Prerequisites (macOS)

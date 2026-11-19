@@ -1,6 +1,6 @@
 # Ichnote — Dokumen Desain & Panduan Build
 
-> **Status:** Draft v0.3 · **Nama:** Ichnote — *leave a trace.*
+> **Status:** Draft v0.4 · **Nama:** Ichnote — *leave a trace.*
 > Aplikasi pencatatan ringan ala Notion, local-first, open-source, dibangun dengan Rust + Tauri, dengan jendela cepat *always-on-top* dan sinkronisasi lewat folder lokal.
 
 ---
@@ -50,11 +50,11 @@ Ichnote adalah aplikasi catatan desktop yang:
 |---|---|---|
 | Shell aplikasi | **Tauri v2** | Lintas platform, WebView bawaan OS |
 | Frontend | **React + TypeScript + Vite** | |
-| Editor blok | **BlockNote** (berbasis TipTap/ProseMirror) | Dukungan Yjs bawaan |
+| Editor blok | **BlockNote** (berbasis TipTap/ProseMirror) + `@blocknote/mantine` | Dukungan Yjs bawaan; versi dikunci persis |
 | CRDT (frontend) | **Yjs** | |
 | CRDT (backend) | **yrs** | Port Rust dari Yjs, format biner kompatibel |
 | Database lokal | **SQLite** via `rusqlite` (feature `bundled`) | + FTS5 untuk pencarian |
-| Migrasi DB | `rusqlite_migration` | |
+| Migrasi DB | runner `user_version` sendiri (`ichnote-core/src/db.rs`) | `rusqlite_migration` 2.7 masih mengunci `rusqlite` 0.41, bentrok dengan `rusqlite` terbaru |
 | ID | `uuid` dengan feature `v7` | Terurut waktu |
 | Pantau folder | `notify` (+ `notify-debouncer-full`) | |
 | Checksum | `blake3` | |
@@ -163,14 +163,16 @@ Y.Doc (id = workspace_id)
 ├── Y.Map "notes"     → note_id → Y.Map {
 │                          title, folder_id, pinned, in_inbox,
 │                          created_at, updated_at, deleted_at }
-└── Y.Map "folders"   → folder_id → Y.Map { name, parent_id, deleted_at }
+└── Y.Map "folders"   → folder_id → Y.Map { name, parent_id, created_at, deleted_at }
 ```
+
+Isi catatan disimpan di `Y.XmlFragment` bernama `"document-store"` (BlockNote diikat ke fragment ini). Timestamp ditulis sebagai integer (aman untuk JS); pembaca juga menerima float.
 
 Menghapus catatan = mengisi `deleted_at` (tombstone), bukan menghapus entri. Ini memastikan penghapusan tersebar ke semua perangkat.
 
 ### 5.2 Skema SQLite
 
-Lokasi: direktori data aplikasi per OS (`~/Library/Application Support/Ichnote/` di macOS, `%APPDATA%\Ichnote\` di Windows). Variabel lingkungan `ICHNOTE_DATA_DIR` menimpa lokasi ini; di build dev, cek single-instance dimatikan agar dua instans dengan data dir berbeda bisa berjalan berdampingan untuk menguji sinkronisasi folder di satu mesin.
+Lokasi: `<direktori data OS>/Ichnote/` via crate `dirs` (`~/Library/Application Support/Ichnote/` di macOS, `%APPDATA%\Ichnote\` di Windows), sengaja **bukan** `app_data_dir()` Tauri agar tidak ikut berubah bila bundle identifier diganti. Isinya `ichnote.db` dan `backups/`. Variabel lingkungan `ICHNOTE_DATA_DIR` menimpa lokasi ini; di build dev, cek single-instance dimatikan agar dua instans dengan data dir berbeda bisa berjalan berdampingan untuk menguji sinkronisasi folder di satu mesin.
 
 ```sql
 PRAGMA journal_mode = WAL;
@@ -255,16 +257,24 @@ CREATE TABLE devices (
 );
 ```
 
-> **Optimasi nanti:** menyimpan `state` utuh setiap perubahan bisa mahal untuk dokumen besar. Alternatifnya, simpan log update per dokumen dan gabungkan berkala. Untuk v1, simpan state utuh dengan debounce (mis. 1–2 detik) sudah cukup.
+> **Persistensi (keputusan Fase 1):** debounce dilakukan di frontend (~300 ms, update digabung dengan `Y.mergeUpdates`, flush saat ganti catatan dan sebelum jendela ditutup). Rust menerapkan setiap batch dan menulis state utuh **langsung** dalam satu transaksi SQLite (WAL, `synchronous=FULL`) — tidak ada debounce di sisi Rust, jadi tidak ada jendela kehilangan data setelah batch diterima. Untuk dokumen besar, nanti bisa diganti log update per dokumen yang digabung berkala.
+>
+> **Outbox** hanya diisi bila workspace punya `sync_path`. Di Fase 1 semua workspace lokal, jadi outbox kosong; saat sinkron pertama diaktifkan (Fase 3) perangkat menulis snapshot penuh.
+>
+> **`updated_at` catatan** di dokumen meta dinaikkan oleh edit isi paling sering sekali per menit, karena setiap tulisan ke dokumen meta ikut tersinkron dan tersimpan di riwayatnya.
+>
+> **Backup harian:** saat aplikasi dibuka, bila backup terbaru lebih tua dari 24 jam, `VACUUM INTO backups/ichnote-<unix_ms>.db` (tulis `.tmp` lalu rename), simpan 7 terbaru.
+>
+> **Client ID yrs** di Rust dibuat acak per sesi aplikasi (tidak pernah dipakai ulang), sehingga state dokumen yang dipulihkan dari backup/salinan DB tidak bisa bentrok dengan edit lama.
 
 ### 5.3 Alur data editor
 
 1. Saat catatan dibuka, frontend memanggil `load_doc(doc_id)` → menerima state biner → `Y.applyUpdate(ydoc, state)` → BlockNote terikat ke `ydoc`.
 2. Setiap perubahan lokal (`ydoc.on('update')`, origin bukan remote) dikirim ke Rust lewat `apply_local_update(doc_id, update)`.
-3. Rust menerapkan update ke dokumen yrs, menyimpan state, memperbarui FTS, dan memasukkan update ke `outbox`.
+3. Rust menerapkan update ke dokumen yrs, menyimpan state, memperbarui FTS (teks polos diambil dari semua node `XmlText` di fragment, satu baris per blok), dan memasukkan update ke `outbox` (bila tersinkron) — semuanya dalam satu transaksi.
 4. Update dari perangkat lain diterapkan Rust lalu dikirim ke frontend lewat event `doc-remote-update`; frontend menerapkannya dengan origin `"remote"` supaya tidak dikirim balik.
 
-> **Tip performa IPC:** jangan kirim `Vec<u8>` sebagai array JSON. Gunakan dukungan payload biner mentah di Tauri v2 (`tauri::ipc::Request`/`Response`) atau base64 sebagai jalan pintas awal.
+> **IPC biner (diterapkan):** `load_doc` mengembalikan `tauri::ipc::Response` (byte mentah → `ArrayBuffer`), `apply_local_update` menerima body biner mentah (`tauri::ipc::Request`) dengan `doc_id` di header `ichnote-doc-id`. Tidak ada array JSON.
 
 > **Catatan cepat** dibuat di frontend jendela cepat (yang juga punya Yjs + skema BlockNote), bukan di Rust. Membangun struktur Yjs yang kompatibel dengan BlockNote dari Rust rawan salah format.
 
@@ -536,13 +546,17 @@ Ikon kecil di sidebar dan jendela cepat: *Tersinkron*, *Menyinkron…*, *Menungg
 | `create_workspace(name)` | Membuat workspace + dokumen meta |
 | `set_sync_folder(workspace_id, path)` | Mengaktifkan sinkronisasi folder |
 | `join_workspace(path)` | Bergabung ke workspace dari folder |
-| `list_notes(workspace_id, filter)` | filter: semua / folder / pinned / inbox / sampah |
-| `create_note(workspace_id, folder_id?)` | Mengembalikan `note_id` |
+| `list_notes(workspace_id, filter)` | filter: `{kind: all\|inbox\|pinned\|trash}` atau `{kind: folder, folderId}` |
+| `get_note(note_id)` | Metadata satu catatan |
+| `create_note(workspace_id, folder_id?, in_inbox?)` | Mengembalikan metadata catatan baru (ID-nya = ID dokumen isi) |
 | `load_doc(doc_id)` | State biner dokumen |
 | `apply_local_update(doc_id, update)` | Menerapkan update dari editor |
 | `update_note_meta(note_id, patch)` | Judul, pin, folder, inbox |
 | `delete_note(note_id)` / `restore_note(note_id)` | Soft delete |
-| `search(workspace_id, query)` | FTS5 |
+| `list_folders(workspace_id)` / `create_folder(workspace_id, name)` / `rename_folder(...)` / `delete_folder(...)` | Folder (hapus = tombstone; catatannya dipindah keluar folder, tidak ikut terhapus) |
+| `search(workspace_id, query, limit?)` | FTS5; input bebas diubah jadi query prefix aman, judul berbobot lebih tinggi, snippet dari isi |
+| `write_export_files(dir, files)` | Menulis hasil ekspor Markdown (path disanitasi, tulis atomik); konversi Markdown dilakukan di frontend dengan BlockNote |
+| `app_info()` | Versi, data dir, device_id |
 | `sync_now(workspace_id)` | Paksa siklus sinkron |
 | `sync_status(workspace_id)` | Status + daftar perangkat |
 | `get_settings()` / `set_setting(key, value)` | Termasuk pintasan keyboard |
@@ -566,11 +580,13 @@ Ikon kecil di sidebar dan jendela cepat: *Tersinkron*, *Menyinkron…*, *Menungg
 - [x] Pilih lisensi, `CONTRIBUTING.md`, keputusan CLA (lihat bagian 12) — MIT OR Apache-2.0 + DCO, lihat `docs/adr/0002`
 
 ### Fase 1 — Aplikasi lokal
-- [ ] Migrasi SQLite + `device_id`
-- [ ] Dokumen meta & isi catatan (yrs ↔ Yjs)
-- [ ] Editor BlockNote, daftar catatan, folder, pin, Inbox, sampah
-- [ ] Pencarian FTS5
-- [ ] Ekspor ke Markdown (per catatan & seluruh workspace)
+- [x] Migrasi SQLite + `device_id`
+- [x] Dokumen meta & isi catatan (yrs ↔ Yjs)
+- [x] Editor BlockNote, daftar catatan, folder, pin, Inbox, sampah
+- [x] Pencarian FTS5
+- [x] Ekspor ke Markdown (per catatan & seluruh workspace)
+
+Catatan Fase 1: UI menampilkan satu workspace ("Personal", dibuat otomatis) dan folder satu tingkat (model tetap punya `parent_id`). Sampah hanya bisa dipulihkan, tidak ada hapus permanen (tombstone tersinkron). Arah visual jendela utama ("Letterpress proof") dicatat di `apps/desktop/.impeccable/surfaces/` dan `apps/desktop/PRODUCT.md`.
 
 **Selesai bila:** bisa dipakai sehari-hari di satu perangkat tanpa kehilangan data setelah restart/crash.
 
