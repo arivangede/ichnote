@@ -12,6 +12,7 @@ authors = ["Ichnote contributors"]
 [workspace.dependencies]
 ichnote-core = { path = "crates/ichnote-core" }
 anyhow = "1.0.104"
+dirs = "7.0.0"
 serde = { version = "1.0.229", features = ["derive"] }
 serde_json = "1.0.154"
 yrs = "0.28.1"
@@ -20,6 +21,7 @@ tempfile = "3.27.0"
 uuid = { version = "1.29.3", features = ["v7", "serde"] }
 tauri = { version = "2.12.7", features = [] }
 tauri-build = { version = "2.7.6", features = [] }
+tauri-plugin-dialog = "2.8.4"
 thiserror = "2.0.21"
 tracing = "0.1.44"
 tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }

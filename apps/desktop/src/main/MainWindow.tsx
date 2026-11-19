@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
-import { getAppVersion } from "../lib/ipc";
+import { getAppInfo } from "../lib/ipc";
 
 export function MainWindow() {
   const [version, setVersion] = useState<string | null>(null);
 
   useEffect(() => {
-    getAppVersion()
-      .then(setVersion)
+    getAppInfo()
+      .then((info) => setVersion(info.version))
       .catch(() => setVersion(null));
   }, []);
 

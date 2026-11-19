@@ -1,13 +1,12 @@
 //! Application layer of Ichnote: Tauri setup, commands, windows.
 
-use anyhow::Context;
-use tracing_subscriber::EnvFilter;
+mod commands;
+mod data_dir;
+mod state;
 
-/// Returns the version of the app and its core library.
-#[tauri::command]
-fn app_version() -> String {
-    ichnote_core::VERSION.to_owned()
-}
+use anyhow::Context;
+use tauri::Manager;
+use tracing_subscriber::EnvFilter;
 
 fn init_tracing() {
     let filter = EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("info"));
@@ -19,9 +18,35 @@ fn init_tracing() {
 pub fn run() -> anyhow::Result<()> {
     init_tracing();
     tracing::info!(version = ichnote_core::VERSION, "starting Ichnote");
+    let data_dir = data_dir::resolve()?;
 
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![app_version])
+        .plugin(tauri_plugin_dialog::init())
+        .setup(move |app| {
+            app.manage(state::AppState::open(&data_dir)?);
+            Ok(())
+        })
+        .invoke_handler(tauri::generate_handler![
+            commands::app_info,
+            commands::list_workspaces,
+            commands::create_workspace,
+            commands::list_notes,
+            commands::get_note,
+            commands::create_note,
+            commands::load_doc,
+            commands::apply_local_update,
+            commands::update_note_meta,
+            commands::delete_note,
+            commands::restore_note,
+            commands::list_folders,
+            commands::create_folder,
+            commands::rename_folder,
+            commands::delete_folder,
+            commands::search,
+            commands::get_settings,
+            commands::set_setting,
+            commands::write_export_files,
+        ])
         .run(tauri::generate_context!())
         .context("failed to run the Tauri application")
 }

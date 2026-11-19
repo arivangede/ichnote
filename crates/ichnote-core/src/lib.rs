@@ -6,6 +6,7 @@ pub mod backup;
 pub mod db;
 pub mod docs;
 pub mod error;
+pub mod export;
 pub mod ids;
 mod index;
 pub mod meta;
