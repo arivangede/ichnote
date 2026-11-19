@@ -39,17 +39,17 @@
       "ink-current": {
         "role": "neutral",
         "displayName": "Ink Current",
-        "canonical": "oklch(0.36 0.07 270)",
-        "dark": "oklch(0.32 0.08 270)",
+        "canonical": "oklch(0.34 0.03 268)",
+        "dark": "oklch(0.28 0 0)",
         "tonalRamp": [
-          "oklch(0.15 0.07 270)",
-          "oklch(0.26 0.07 270)",
-          "oklch(0.37 0.07 270)",
-          "oklch(0.48 0.07 270)",
-          "oklch(0.6 0.07 270)",
-          "oklch(0.72 0.07 270)",
-          "oklch(0.84 0.07 270)",
-          "oklch(0.95 0.07 270)"
+          "oklch(0.15 0.03 268)",
+          "oklch(0.26 0.03 268)",
+          "oklch(0.37 0.03 268)",
+          "oklch(0.48 0.03 268)",
+          "oklch(0.6 0.03 268)",
+          "oklch(0.72 0.03 268)",
+          "oklch(0.84 0.03 268)",
+          "oklch(0.95 0.03 268)"
         ]
       },
       "on-ink": {
@@ -230,34 +230,34 @@
       },
       "accent": {
         "role": "primary",
-        "displayName": "Press Indigo",
-        "canonical": "oklch(0.46 0.17 272)",
-        "dark": "oklch(0.76 0.12 272)",
+        "displayName": "Press Amber",
+        "canonical": "oklch(0.5 0.12 65)",
+        "dark": "oklch(0.82 0.14 78)",
         "tonalRamp": [
-          "oklch(0.15 0.17 272)",
-          "oklch(0.26 0.17 272)",
-          "oklch(0.37 0.17 272)",
-          "oklch(0.48 0.17 272)",
-          "oklch(0.6 0.17 272)",
-          "oklch(0.72 0.17 272)",
-          "oklch(0.84 0.17 272)",
-          "oklch(0.95 0.17 272)"
+          "oklch(0.15 0.12 65)",
+          "oklch(0.26 0.12 65)",
+          "oklch(0.37 0.12 65)",
+          "oklch(0.48 0.12 65)",
+          "oklch(0.6 0.12 65)",
+          "oklch(0.72 0.12 65)",
+          "oklch(0.84 0.12 65)",
+          "oklch(0.95 0.12 65)"
         ]
       },
       "accent-soft": {
         "role": "primary",
-        "displayName": "Indigo Wash",
-        "canonical": "oklch(0.92 0.045 272)",
-        "dark": "oklch(0.33 0.07 272)",
+        "displayName": "Amber Wash",
+        "canonical": "oklch(0.93 0.07 85)",
+        "dark": "oklch(0.3 0.055 70)",
         "tonalRamp": [
-          "oklch(0.15 0.045 272)",
-          "oklch(0.26 0.045 272)",
-          "oklch(0.37 0.045 272)",
-          "oklch(0.48 0.045 272)",
-          "oklch(0.6 0.045 272)",
-          "oklch(0.72 0.045 272)",
-          "oklch(0.84 0.045 272)",
-          "oklch(0.95 0.045 272)"
+          "oklch(0.15 0.07 85)",
+          "oklch(0.26 0.07 85)",
+          "oklch(0.37 0.07 85)",
+          "oklch(0.48 0.07 85)",
+          "oklch(0.6 0.07 85)",
+          "oklch(0.72 0.07 85)",
+          "oklch(0.84 0.07 85)",
+          "oklch(0.95 0.07 85)"
         ]
       },
       "on-accent": {
@@ -389,7 +389,7 @@
       "name": "Icon Toggle",
       "kind": "button",
       "refersTo": "icon-button",
-      "description": "28px toolbar icon button; pressed toggles take the Indigo Wash.",
+      "description": "28px toolbar icon button; pressed toggles take the Amber Wash.",
       "html": "<button class=\"ds-icon-button\" aria-pressed=\"true\" aria-label=\"Unpin\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 17v5\"/><path d=\"M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z\"/></svg></button><button class=\"ds-icon-button ds-danger\" aria-label=\"Move to Trash\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"><path d=\"M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6\"/></svg></button>",
       "css": ".ds-icon-button{display:inline-grid;place-items:center;width:28px;height:28px;border:0;border-radius:var(--radius);background:none;color:var(--text-muted);cursor:pointer} .ds-icon-button:hover{background:var(--stock-sunk);color:var(--text)} .ds-icon-button[aria-pressed=true]{background:var(--accent-soft);color:var(--accent)} .ds-icon-button.ds-danger:hover{color:var(--danger)} .ds-icon-button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}"
     },
@@ -397,7 +397,7 @@
       "name": "Note Row",
       "kind": "custom",
       "refersTo": "note-row",
-      "description": "List entry: title and tabular date on one baseline; current row in Indigo Wash.",
+      "description": "List entry: title and tabular date on one baseline; current row in Amber Wash.",
       "html": "<div class=\"ds-list\"><button class=\"ds-note-row\" aria-current=\"true\"><span class=\"ds-row-top\"><span class=\"ds-row-title\">Meeting notes</span><span class=\"ds-row-date\">10:10</span></span><span class=\"ds-row-flags\">Pinned</span></button><button class=\"ds-note-row\"><span class=\"ds-row-top\"><span class=\"ds-row-title\">Grocery list</span><span class=\"ds-row-date\">10:05</span></span></button></div>",
       "css": ".ds-list{width:304px;padding:0 8px;background:var(--stock-list)} .ds-note-row{display:flex;flex-direction:column;gap:4px;width:100%;padding:12px;border:0;border-bottom:1px solid var(--rule);background:none;color:var(--text);font:inherit;text-align:left;cursor:pointer} .ds-note-row:hover{background:var(--row-hover);border-radius:var(--radius)} .ds-note-row[aria-current=true]{background:var(--accent-soft);border-radius:var(--radius);border-bottom-color:transparent} .ds-note-row:focus-visible{outline:2px solid var(--accent);outline-offset:2px} .ds-row-top{display:flex;align-items:baseline;gap:12px} .ds-row-title{flex:1;font-weight:500} .ds-note-row[aria-current=true] .ds-row-title{color:var(--accent)} .ds-row-date,.ds-row-flags{color:var(--text-muted);font-size:12px;line-height:16px;font-variant-numeric:tabular-nums}"
     },
@@ -420,11 +420,11 @@
   ],
   "narrative": {
     "northStar": "Letterpress Proof",
-    "overview": "A note is ink pressed onto stock. The editor is a clean proof sheet; the shell is the ink. The sidebar is a single deep blue-black ink slab carrying the wordmark, search, and navigation, while the note list and editor sit on warm off-white proof stock. In dark mode the relationship inverts in value but not in role: the stock becomes ink-toned and the type becomes paper-white, and the sidebar drops to a near-black ink so it still reads as the darker, denser layer.\n\nThe window is dense and quiet, built for all-day, keyboard-first use. Colour never decorates; it does one of three jobs: shell (ink), selection and focus (one indigo accent), or danger (proof red). Everything else is a value step within ink or stock. One sturdy system grotesk carries every role, and every spacing value sits on a 4px grid.\n\nThe signature is the registration mark beside the note title: a printer's crop mark that reports whether the note is on disk. Save state is carried in line form (dashed, solid, struck through), not in hue. The world refuses the grey-on-grey sidebar-plus-white-page default.",
+    "overview": "A note is ink pressed onto stock. The editor is a clean proof sheet; the shell is the ink. The sidebar is a single deep blue-black ink slab carrying the wordmark, search, and navigation, while the note list and editor sit on warm off-white proof stock. In dark mode the relationship inverts in value but not in role: the stock becomes ink-toned and the type becomes paper-white, and the sidebar drops to a near-black ink so it still reads as the darker, denser layer.\n\nThe window is dense and quiet, built for all-day, keyboard-first use. Colour never decorates; it does one of three jobs: shell (ink), selection and focus (one amber accent), or danger (proof red). Everything else is a value step within ink or stock. One sturdy system grotesk carries every role, and every spacing value sits on a 4px grid.\n\nThe signature is the registration mark beside the note title: a printer's crop mark that reports whether the note is on disk. Save state is carried in line form (dashed, solid, struck through), not in hue. The world refuses the grey-on-grey sidebar-plus-white-page default.",
     "keyCharacteristics": [
       "Three-column grid: ink sidebar (232px), proof-stock list (260 to 320px), editor sheet (fluid, content capped at 760px).",
       "Ink appears only on the sidebar and the transient toast; stock carries all content.",
-      "One accent hue (indigo, hue 272) for selection, pressed toggles, focus, caret, and text selection.",
+      "One accent hue (amber, hue 65–78) for selection, pressed toggles, focus, caret, and text selection.",
       "Proof red (hue 27) only for destructive hover and save errors.",
       "Flat surfaces separated by 1px rules and value steps; one shadow, on the toast.",
       "Everything on a 4px grid; tabular numerals for dates and counts."

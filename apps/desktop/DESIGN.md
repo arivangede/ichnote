@@ -4,7 +4,7 @@ description: Local-first block notes. Leave a trace.
 colors:
   ink: "oklch(0.235 0.035 268)"
   ink-hover: "oklch(0.3 0.04 268)"
-  ink-current: "oklch(0.36 0.07 270)"
+  ink-current: "oklch(0.34 0.03 268)"
   on-ink: "oklch(0.96 0.01 95)"
   on-ink-muted: "oklch(0.78 0.025 268)"
   ink-rule: "oklch(0.34 0.03 268)"
@@ -16,8 +16,8 @@ colors:
   rule: "oklch(0.87 0.012 95)"
   text: "oklch(0.25 0.025 268)"
   text-muted: "oklch(0.47 0.02 268)"
-  accent: "oklch(0.46 0.17 272)"
-  accent-soft: "oklch(0.92 0.045 272)"
+  accent: "oklch(0.5 0.12 65)"
+  accent-soft: "oklch(0.93 0.07 85)"
   on-accent: "oklch(0.985 0.006 95)"
   danger: "oklch(0.5 0.18 27)"
 typography:
@@ -140,25 +140,25 @@ components:
 
 A note is ink pressed onto stock. The editor is a clean proof sheet; the shell is the ink. The sidebar is a single deep blue-black ink slab carrying the wordmark, search, and navigation, while the note list and editor sit on warm off-white proof stock. In dark mode the relationship inverts in value but not in role: the stock becomes ink-toned and the type becomes paper-white, and the sidebar drops to a near-black ink so it still reads as the darker, denser layer.
 
-The window is dense and quiet, built for all-day, keyboard-first use. Colour never decorates; it does one of three jobs: shell (ink), selection and focus (one indigo accent), or danger (proof red). Everything else is a value step within ink or stock. One sturdy system grotesk carries every role, and every spacing value sits on a 4px grid.
+The window is dense and quiet, built for all-day, keyboard-first use. Colour never decorates; it does one of three jobs: shell (ink), selection and focus (one amber accent), or danger (proof red). Everything else is a value step within ink or stock. One sturdy system grotesk carries every role, and every spacing value sits on a 4px grid.
 
 The signature is the registration mark beside the note title: a printer's crop mark that reports whether the note is on disk. Save state is carried in line form (dashed, solid, struck through), not in hue. The world refuses the grey-on-grey sidebar-plus-white-page default.
 
 **Key Characteristics:**
 - Three-column grid: ink sidebar (232px), proof-stock list (260 to 320px), editor sheet (fluid, content capped at 760px).
 - Ink appears only on the sidebar and the transient toast; stock carries all content.
-- One accent hue (indigo, hue 272) for selection, pressed toggles, focus, caret, and text selection.
+- One accent hue (amber, hue 65–78) for selection, pressed toggles, focus, caret, and text selection.
 - Proof red (hue 27) only for destructive hover and save errors.
 - Flat surfaces separated by 1px rules and value steps; one shadow, on the toast.
 - Everything on a 4px grid; tabular numerals for dates and counts.
 
 ## Colors
 
-Ink on paper: a cool blue-black ink (hue 268) against warm cream stock (hue 95), with one indigo ink and one proof red that only appear when they mean something. Dark-mode values are defined in the `prefers-color-scheme: dark` block of `src/styles.css` and are recorded in the sidecar.
+Ink on paper: a cool blue-black ink (hue 268) against warm cream stock (hue 95), with one amber ink and one proof red that only appear when they mean something. Dark-mode values are defined in the `prefers-color-scheme: dark` block of `src/styles.css` and are recorded in the sidecar.
 
 ### Primary
-- **Press Indigo** (accent): the current note's title in the list, pressed toggle icons (Pin, Inbox), the 2px focus ring, the text caret, and the BlockNote selected state. Lightens to a pale indigo in dark mode so it stays AA on ink stock.
-- **Indigo Wash** (accent-soft): background of the current note row, pressed icon buttons, text selection, and search-hit highlights in snippets.
+- **Press Amber** (accent): the current note's title in the list, pressed toggle icons (Pin, Inbox), the 2px focus ring, the text caret, and the BlockNote selected state. Lightens to a bright amber in dark mode so it stays AA on ink stock.
+- **Amber Wash** (accent-soft): background of the current note row, pressed icon buttons, text selection, and search-hit highlights in snippets.
 - **On Accent** (on-accent): text on solid accent fills (BlockNote selected menu items).
 
 ### Secondary
@@ -166,7 +166,7 @@ Ink on paper: a cool blue-black ink (hue 268) against warm cream stock (hue 95),
 
 ### Neutral
 - **Shell Ink** (ink): the sidebar ground and the toast. The densest surface in both themes.
-- **Ink Hover / Ink Current** (ink-hover, ink-current): sidebar hover and the current navigation item; the current item leans slightly toward indigo (chroma 0.07) so it reads as selected without a second accent.
+- **Ink Hover / Ink Current** (ink-hover, ink-current): sidebar hover and the current navigation item; the current item is a lighter ink step, not a second accent.
 - **On Ink / On Ink Muted** (on-ink, on-ink-muted): sidebar text; muted for resting items, placeholders, and section labels, full for hover and current.
 - **Ink Rule** (ink-rule): borders and dividers inside the sidebar.
 - **Proof Stock** (stock): the editor sheet and app ground.
@@ -230,7 +230,7 @@ Quiet and functional; nothing shouts.
 - **Shape:** gently rounded (6px), 32px tall, 12px horizontal padding, 8px icon gap, 500 weight.
 - **Default:** raised stock fill with a 1px rule border (New note, Restore).
 - **Hover:** the border darkens to muted type; no fill change, no lift.
-- **Icon button:** 28px square, transparent, muted icon; hover fills with sunk stock. As a toggle (`aria-pressed`) it takes the Indigo Wash with an accent icon. The destructive variant turns its icon Proof Red on hover. On ink it shrinks to 24px and hovers to ink-hover.
+- **Icon button:** 28px square, transparent, muted icon; hover fills with sunk stock. As a toggle (`aria-pressed`) it takes the Amber Wash with an accent icon. The destructive variant turns its icon Proof Red on hover. On ink it shrinks to 24px and hovers to ink-hover.
 - **Focus:** every control shows a 2px accent outline at 2px offset; inside the sidebar the outline switches to on-ink.
 
 ### Inputs / Fields
@@ -245,7 +245,7 @@ Quiet and functional; nothing shouts.
 
 ### Note List Rows
 - **Structure:** title (500, ellipsised) and tabular date on one baseline; optional two-line snippet; optional flags (Pinned, Inbox) as 12px icon plus label.
-- **States:** hover fills row-hover and rounds; the current row fills Indigo Wash, rounds, and its title turns Press Indigo. Untitled notes show a muted, regular-weight placeholder.
+- **States:** hover fills row-hover and rounds; the current row fills Amber Wash, rounds, and its title turns Press Amber. Untitled notes show a muted, regular-weight placeholder.
 
 ### Toast
 Ink chip at the bottom centre, 8px / 16px padding, 6px radius, the toast-lift shadow, rising 8px into place over 260ms on the out-expo curve.

@@ -15,7 +15,7 @@ FORM: Letterpress proof — seed:f9cdadb56c0a5167 (assigned).
 
 THESIS: A note is ink pressed onto stock: the editor is a clean proof sheet, the shell is the ink. Refuses the grey-on-grey sidebar-plus-white-page default.
 
-OWN-WORLD: Deep blue-black ink sidebar shell; off-white proof stock for list and editor (dark mode: ink stock, paper-white type); one indigo ink accent for selection and focus; proof red only for Trash/destructive. One sturdy grotesk (system UI stack) on a 4px grid, tabular numerals for dates.
+OWN-WORLD: Deep blue-black ink sidebar shell; off-white proof stock for list and editor (dark mode: ink stock, paper-white type); one amber ink accent for selection and focus (changed from indigo at the user's request, 2026-11-19); proof red only for Trash/destructive. One sturdy grotesk (system UI stack) on a 4px grid, tabular numerals for dates.
 
 STORY: The visitor sees where notes live (sidebar), which notes match (list), and the note itself (editor), and always knows whether their words are safely on disk.
 

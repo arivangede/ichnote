@@ -8,7 +8,7 @@
   /* Ink shell */
   --ink: oklch(0.235 0.035 268);
   --ink-hover: oklch(0.3 0.04 268);
-  --ink-current: oklch(0.36 0.07 270);
+  --ink-current: oklch(0.34 0.03 268);
   --on-ink: oklch(0.96 0.01 95);
   --on-ink-muted: oklch(0.78 0.025 268);
   --ink-rule: oklch(0.34 0.03 268);
@@ -24,8 +24,8 @@
   --text-muted: oklch(0.47 0.02 268);
 
   /* Ink colours that carry meaning */
-  --accent: oklch(0.46 0.17 272);
-  --accent-soft: oklch(0.92 0.045 272);
+  --accent: oklch(0.5 0.12 65);
+  --accent-soft: oklch(0.93 0.07 85);
   --on-accent: oklch(0.985 0.006 95);
   --danger: oklch(0.5 0.18 27);
   --shadow-color: oklch(0.25 0.03 268 / 0.18);
@@ -70,8 +70,8 @@
     --text: oklch(0.93 0 0);
     --text-muted: oklch(0.71 0 0);
 
-    --accent: oklch(0.77 0.11 272);
-    --accent-soft: oklch(0.32 0.06 272);
+    --accent: oklch(0.82 0.14 78);
+    --accent-soft: oklch(0.3 0.055 70);
     --on-accent: oklch(0.16 0 0);
     --danger: oklch(0.72 0.15 27);
     --shadow-color: oklch(0 0 0 / 0.5);
