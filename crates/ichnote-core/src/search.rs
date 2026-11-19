@@ -47,7 +47,7 @@ impl Store {
             return Ok(Vec::new());
         };
         let mut stmt = self.conn.prepare(
-            "SELECT n.id, snippet(notes_fts, -1, ?4, ?5, '…', 12)
+            "SELECT n.id, snippet(notes_fts, 2, ?4, ?5, '…', 12)
              FROM notes_fts JOIN notes_index n ON n.id = notes_fts.note_id
              WHERE notes_fts MATCH ?1 AND n.workspace_id = ?2 AND n.deleted_at IS NULL
              ORDER BY bm25(notes_fts, 0.0, 10.0, 1.0), n.updated_at DESC
