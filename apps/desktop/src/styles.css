@@ -383,15 +383,6 @@ kbd {
   border-color: var(--text-muted);
 }
 
-.button.primary {
-  border-color: var(--accent);
-  background: var(--accent);
-  color: var(--on-accent);
-}
-
-.button.primary:hover {
-  filter: brightness(1.08);
-}
 
 /* Note list */
 

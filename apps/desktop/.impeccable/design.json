@@ -1,0 +1,486 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-19T02:13:23.838Z",
+  "title": "Design System: Ichnote",
+  "extensions": {
+    "colorMeta": {
+      "ink": {
+        "role": "neutral",
+        "displayName": "Shell Ink",
+        "canonical": "oklch(0.235 0.035 268)",
+        "dark": "oklch(0.13 0.02 268)",
+        "tonalRamp": [
+          "oklch(0.15 0.035 268)",
+          "oklch(0.26 0.035 268)",
+          "oklch(0.37 0.035 268)",
+          "oklch(0.48 0.035 268)",
+          "oklch(0.6 0.035 268)",
+          "oklch(0.72 0.035 268)",
+          "oklch(0.84 0.035 268)",
+          "oklch(0.95 0.035 268)"
+        ]
+      },
+      "ink-hover": {
+        "role": "neutral",
+        "displayName": "Ink Hover",
+        "canonical": "oklch(0.3 0.04 268)",
+        "dark": "oklch(0.2 0.025 268)",
+        "tonalRamp": [
+          "oklch(0.15 0.04 268)",
+          "oklch(0.26 0.04 268)",
+          "oklch(0.37 0.04 268)",
+          "oklch(0.48 0.04 268)",
+          "oklch(0.6 0.04 268)",
+          "oklch(0.72 0.04 268)",
+          "oklch(0.84 0.04 268)",
+          "oklch(0.95 0.04 268)"
+        ]
+      },
+      "ink-current": {
+        "role": "neutral",
+        "displayName": "Ink Current",
+        "canonical": "oklch(0.36 0.07 270)",
+        "dark": "oklch(0.32 0.08 270)",
+        "tonalRamp": [
+          "oklch(0.15 0.07 270)",
+          "oklch(0.26 0.07 270)",
+          "oklch(0.37 0.07 270)",
+          "oklch(0.48 0.07 270)",
+          "oklch(0.6 0.07 270)",
+          "oklch(0.72 0.07 270)",
+          "oklch(0.84 0.07 270)",
+          "oklch(0.95 0.07 270)"
+        ]
+      },
+      "on-ink": {
+        "role": "neutral",
+        "displayName": "On Ink",
+        "canonical": "oklch(0.96 0.01 95)",
+        "dark": "oklch(0.94 0.01 95)",
+        "tonalRamp": [
+          "oklch(0.15 0.01 95)",
+          "oklch(0.26 0.01 95)",
+          "oklch(0.37 0.01 95)",
+          "oklch(0.48 0.01 95)",
+          "oklch(0.6 0.01 95)",
+          "oklch(0.72 0.01 95)",
+          "oklch(0.84 0.01 95)",
+          "oklch(0.95 0.01 95)"
+        ]
+      },
+      "on-ink-muted": {
+        "role": "neutral",
+        "displayName": "On Ink Muted",
+        "canonical": "oklch(0.78 0.025 268)",
+        "dark": "oklch(0.74 0.02 268)",
+        "tonalRamp": [
+          "oklch(0.15 0.025 268)",
+          "oklch(0.26 0.025 268)",
+          "oklch(0.37 0.025 268)",
+          "oklch(0.48 0.025 268)",
+          "oklch(0.6 0.025 268)",
+          "oklch(0.72 0.025 268)",
+          "oklch(0.84 0.025 268)",
+          "oklch(0.95 0.025 268)"
+        ]
+      },
+      "ink-rule": {
+        "role": "neutral",
+        "displayName": "Ink Rule",
+        "canonical": "oklch(0.34 0.03 268)",
+        "dark": "oklch(0.24 0.025 268)",
+        "tonalRamp": [
+          "oklch(0.15 0.03 268)",
+          "oklch(0.26 0.03 268)",
+          "oklch(0.37 0.03 268)",
+          "oklch(0.48 0.03 268)",
+          "oklch(0.6 0.03 268)",
+          "oklch(0.72 0.03 268)",
+          "oklch(0.84 0.03 268)",
+          "oklch(0.95 0.03 268)"
+        ]
+      },
+      "stock": {
+        "role": "neutral",
+        "displayName": "Proof Stock",
+        "canonical": "oklch(0.985 0.006 95)",
+        "dark": "oklch(0.245 0.01 268)",
+        "tonalRamp": [
+          "oklch(0.15 0.006 95)",
+          "oklch(0.26 0.006 95)",
+          "oklch(0.37 0.006 95)",
+          "oklch(0.48 0.006 95)",
+          "oklch(0.6 0.006 95)",
+          "oklch(0.72 0.006 95)",
+          "oklch(0.84 0.006 95)",
+          "oklch(0.95 0.006 95)"
+        ]
+      },
+      "stock-raised": {
+        "role": "neutral",
+        "displayName": "Raised Stock",
+        "canonical": "oklch(1 0 0)",
+        "dark": "oklch(0.29 0.012 268)",
+        "tonalRamp": [
+          "oklch(0.15 0 0)",
+          "oklch(0.26 0 0)",
+          "oklch(0.37 0 0)",
+          "oklch(0.48 0 0)",
+          "oklch(0.6 0 0)",
+          "oklch(0.72 0 0)",
+          "oklch(0.84 0 0)",
+          "oklch(0.95 0 0)"
+        ]
+      },
+      "stock-list": {
+        "role": "neutral",
+        "displayName": "List Stock",
+        "canonical": "oklch(0.965 0.008 95)",
+        "dark": "oklch(0.205 0.012 268)",
+        "tonalRamp": [
+          "oklch(0.15 0.008 95)",
+          "oklch(0.26 0.008 95)",
+          "oklch(0.37 0.008 95)",
+          "oklch(0.48 0.008 95)",
+          "oklch(0.6 0.008 95)",
+          "oklch(0.72 0.008 95)",
+          "oklch(0.84 0.008 95)",
+          "oklch(0.95 0.008 95)"
+        ]
+      },
+      "stock-sunk": {
+        "role": "neutral",
+        "displayName": "Sunk Stock",
+        "canonical": "oklch(0.93 0.01 95)",
+        "dark": "oklch(0.31 0.012 268)",
+        "tonalRamp": [
+          "oklch(0.15 0.01 95)",
+          "oklch(0.26 0.01 95)",
+          "oklch(0.37 0.01 95)",
+          "oklch(0.48 0.01 95)",
+          "oklch(0.6 0.01 95)",
+          "oklch(0.72 0.01 95)",
+          "oklch(0.84 0.01 95)",
+          "oklch(0.95 0.01 95)"
+        ]
+      },
+      "row-hover": {
+        "role": "neutral",
+        "displayName": "Row Hover",
+        "canonical": "oklch(0.935 0.01 95)",
+        "dark": "oklch(0.25 0.012 268)",
+        "tonalRamp": [
+          "oklch(0.15 0.01 95)",
+          "oklch(0.26 0.01 95)",
+          "oklch(0.37 0.01 95)",
+          "oklch(0.48 0.01 95)",
+          "oklch(0.6 0.01 95)",
+          "oklch(0.72 0.01 95)",
+          "oklch(0.84 0.01 95)",
+          "oklch(0.95 0.01 95)"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Rule",
+        "canonical": "oklch(0.87 0.012 95)",
+        "dark": "oklch(0.34 0.012 268)",
+        "tonalRamp": [
+          "oklch(0.15 0.012 95)",
+          "oklch(0.26 0.012 95)",
+          "oklch(0.37 0.012 95)",
+          "oklch(0.48 0.012 95)",
+          "oklch(0.6 0.012 95)",
+          "oklch(0.72 0.012 95)",
+          "oklch(0.84 0.012 95)",
+          "oklch(0.95 0.012 95)"
+        ]
+      },
+      "text": {
+        "role": "neutral",
+        "displayName": "Type Ink",
+        "canonical": "oklch(0.25 0.025 268)",
+        "dark": "oklch(0.93 0.01 95)",
+        "tonalRamp": [
+          "oklch(0.15 0.025 268)",
+          "oklch(0.26 0.025 268)",
+          "oklch(0.37 0.025 268)",
+          "oklch(0.48 0.025 268)",
+          "oklch(0.6 0.025 268)",
+          "oklch(0.72 0.025 268)",
+          "oklch(0.84 0.025 268)",
+          "oklch(0.95 0.025 268)"
+        ]
+      },
+      "text-muted": {
+        "role": "neutral",
+        "displayName": "Muted Type",
+        "canonical": "oklch(0.47 0.02 268)",
+        "dark": "oklch(0.74 0.015 268)",
+        "tonalRamp": [
+          "oklch(0.15 0.02 268)",
+          "oklch(0.26 0.02 268)",
+          "oklch(0.37 0.02 268)",
+          "oklch(0.48 0.02 268)",
+          "oklch(0.6 0.02 268)",
+          "oklch(0.72 0.02 268)",
+          "oklch(0.84 0.02 268)",
+          "oklch(0.95 0.02 268)"
+        ]
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "Press Indigo",
+        "canonical": "oklch(0.46 0.17 272)",
+        "dark": "oklch(0.76 0.12 272)",
+        "tonalRamp": [
+          "oklch(0.15 0.17 272)",
+          "oklch(0.26 0.17 272)",
+          "oklch(0.37 0.17 272)",
+          "oklch(0.48 0.17 272)",
+          "oklch(0.6 0.17 272)",
+          "oklch(0.72 0.17 272)",
+          "oklch(0.84 0.17 272)",
+          "oklch(0.95 0.17 272)"
+        ]
+      },
+      "accent-soft": {
+        "role": "primary",
+        "displayName": "Indigo Wash",
+        "canonical": "oklch(0.92 0.045 272)",
+        "dark": "oklch(0.33 0.07 272)",
+        "tonalRamp": [
+          "oklch(0.15 0.045 272)",
+          "oklch(0.26 0.045 272)",
+          "oklch(0.37 0.045 272)",
+          "oklch(0.48 0.045 272)",
+          "oklch(0.6 0.045 272)",
+          "oklch(0.72 0.045 272)",
+          "oklch(0.84 0.045 272)",
+          "oklch(0.95 0.045 272)"
+        ]
+      },
+      "on-accent": {
+        "role": "primary",
+        "displayName": "On Accent",
+        "canonical": "oklch(0.985 0.006 95)",
+        "dark": "oklch(0.18 0.03 268)",
+        "tonalRamp": [
+          "oklch(0.15 0.006 95)",
+          "oklch(0.26 0.006 95)",
+          "oklch(0.37 0.006 95)",
+          "oklch(0.48 0.006 95)",
+          "oklch(0.6 0.006 95)",
+          "oklch(0.72 0.006 95)",
+          "oklch(0.84 0.006 95)",
+          "oklch(0.95 0.006 95)"
+        ]
+      },
+      "danger": {
+        "role": "secondary",
+        "displayName": "Proof Red",
+        "canonical": "oklch(0.5 0.18 27)",
+        "dark": "oklch(0.72 0.15 27)",
+        "tonalRamp": [
+          "oklch(0.15 0.18 27)",
+          "oklch(0.26 0.18 27)",
+          "oklch(0.37 0.18 27)",
+          "oklch(0.48 0.18 27)",
+          "oklch(0.6 0.18 27)",
+          "oklch(0.72 0.18 27)",
+          "oklch(0.84 0.18 27)",
+          "oklch(0.95 0.18 27)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "headline": {
+        "displayName": "Note Title",
+        "purpose": "The note title input on the proof sheet."
+      },
+      "title": {
+        "displayName": "Pane Title",
+        "purpose": "Note-list pane heading."
+      },
+      "wordmark": {
+        "displayName": "Wordmark",
+        "purpose": "Lowercase 'ichnote' wordmark atop the sidebar only."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Base UI text: navigation, rows, buttons, search."
+      },
+      "body-small": {
+        "displayName": "Body Small",
+        "purpose": "Note-row snippets and empty-folder text."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Counts, dates, row flags, sentence-case section headings; tabular numerals."
+      }
+    },
+    "shadows": [
+      {
+        "name": "toast-lift",
+        "value": "0 4px 16px var(--shadow-color)",
+        "purpose": "The transient status toast only. shadow-color is oklch(0.25 0.03 268 / 0.18) light, oklch(0 0 0 / 0.45) dark."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "All state transitions."
+      },
+      {
+        "name": "regmark-state",
+        "value": "420ms",
+        "purpose": "Registration mark dash, stroke, and dot transitions."
+      },
+      {
+        "name": "toast-in",
+        "value": "260ms",
+        "purpose": "Toast rises 8px and fades in."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "0ms",
+        "purpose": "prefers-reduced-motion zeroes every transition and animation."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "narrow",
+        "value": "900px",
+        "purpose": "Below this, columns narrow to 200px / 240px / fluid."
+      }
+    ],
+    "focus": {
+      "value": "outline: 2px solid var(--accent); outline-offset: 2px",
+      "onInk": "outline-color: var(--on-ink)"
+    }
+  },
+  "components": [
+    {
+      "name": "Sidebar Navigation",
+      "kind": "nav",
+      "refersTo": "nav-item",
+      "description": "Ink sidebar items: muted at rest, ink-hover on hover, ink-current when current.",
+      "html": "<nav class=\"ds-sidebar\"><button class=\"ds-nav-item\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M22 12h-6l-2 3h-4l-2-3H2\"/><path d=\"M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z\"/></svg>Inbox</button><button class=\"ds-nav-item\" aria-current=\"page\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M2 6h4M2 10h4M2 14h4M2 18h4\"/><rect width=\"16\" height=\"20\" x=\"4\" y=\"2\" rx=\"2\"/><path d=\"M16 2v20\"/></svg>All notes</button></nav>",
+      "css": ".ds-sidebar{display:flex;flex-direction:column;gap:4px;width:208px;padding:12px;background:var(--ink)} .ds-nav-item{display:flex;align-items:center;gap:12px;min-height:32px;padding:4px 8px;border:0;border-radius:var(--radius);background:none;color:var(--on-ink-muted);font:inherit;text-align:left;cursor:pointer} .ds-nav-item:hover{background:var(--ink-hover);color:var(--on-ink)} .ds-nav-item[aria-current=page]{background:var(--ink-current);color:var(--on-ink);font-weight:500} .ds-nav-item:focus-visible{outline:2px solid var(--on-ink);outline-offset:2px}"
+    },
+    {
+      "name": "Search Field",
+      "kind": "input",
+      "refersTo": "search-field",
+      "description": "Search on ink with a shortcut hint.",
+      "html": "<label class=\"ds-search\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"><circle cx=\"11\" cy=\"11\" r=\"8\"/><path d=\"m21 21-4.3-4.3\"/></svg><input placeholder=\"Search notes\"><span class=\"ds-search-hint\">⌘F</span></label>",
+      "css": ".ds-search{display:flex;align-items:center;gap:8px;height:32px;width:208px;padding:0 8px;border:1px solid var(--ink-rule);border-radius:var(--radius);background:var(--ink-hover);color:var(--on-ink-muted)} .ds-search:focus-within{border-color:var(--on-ink-muted)} .ds-search input{flex:1;min-width:0;border:0;background:none;color:var(--on-ink);font:inherit;outline:none} .ds-search input::placeholder{color:var(--on-ink-muted)} .ds-search-hint{font-size:12px}"
+    },
+    {
+      "name": "Button",
+      "kind": "button",
+      "refersTo": "button",
+      "description": "Default raised-stock button (New note, Restore).",
+      "html": "<button class=\"ds-button\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"><path d=\"M5 12h14M12 5v14\"/></svg>New note</button>",
+      "css": ".ds-button{display:inline-flex;align-items:center;gap:8px;height:32px;padding:0 12px;border:1px solid var(--rule);border-radius:var(--radius);background:var(--stock-raised);color:var(--text);font:inherit;font-weight:500;cursor:pointer} .ds-button:hover{border-color:var(--text-muted)} .ds-button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}"
+    },
+    {
+      "name": "Icon Toggle",
+      "kind": "button",
+      "refersTo": "icon-button",
+      "description": "28px toolbar icon button; pressed toggles take the Indigo Wash.",
+      "html": "<button class=\"ds-icon-button\" aria-pressed=\"true\" aria-label=\"Unpin\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M12 17v5\"/><path d=\"M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z\"/></svg></button><button class=\"ds-icon-button ds-danger\" aria-label=\"Move to Trash\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\"><path d=\"M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6\"/></svg></button>",
+      "css": ".ds-icon-button{display:inline-grid;place-items:center;width:28px;height:28px;border:0;border-radius:var(--radius);background:none;color:var(--text-muted);cursor:pointer} .ds-icon-button:hover{background:var(--stock-sunk);color:var(--text)} .ds-icon-button[aria-pressed=true]{background:var(--accent-soft);color:var(--accent)} .ds-icon-button.ds-danger:hover{color:var(--danger)} .ds-icon-button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}"
+    },
+    {
+      "name": "Note Row",
+      "kind": "custom",
+      "refersTo": "note-row",
+      "description": "List entry: title and tabular date on one baseline; current row in Indigo Wash.",
+      "html": "<div class=\"ds-list\"><button class=\"ds-note-row\" aria-current=\"true\"><span class=\"ds-row-top\"><span class=\"ds-row-title\">Meeting notes</span><span class=\"ds-row-date\">10:10</span></span><span class=\"ds-row-flags\">Pinned</span></button><button class=\"ds-note-row\"><span class=\"ds-row-top\"><span class=\"ds-row-title\">Grocery list</span><span class=\"ds-row-date\">10:05</span></span></button></div>",
+      "css": ".ds-list{width:304px;padding:0 8px;background:var(--stock-list)} .ds-note-row{display:flex;flex-direction:column;gap:4px;width:100%;padding:12px;border:0;border-bottom:1px solid var(--rule);background:none;color:var(--text);font:inherit;text-align:left;cursor:pointer} .ds-note-row:hover{background:var(--row-hover);border-radius:var(--radius)} .ds-note-row[aria-current=true]{background:var(--accent-soft);border-radius:var(--radius);border-bottom-color:transparent} .ds-note-row:focus-visible{outline:2px solid var(--accent);outline-offset:2px} .ds-row-top{display:flex;align-items:baseline;gap:12px} .ds-row-title{flex:1;font-weight:500} .ds-note-row[aria-current=true] .ds-row-title{color:var(--accent)} .ds-row-date,.ds-row-flags{color:var(--text-muted);font-size:12px;line-height:16px;font-variant-numeric:tabular-nums}"
+    },
+    {
+      "name": "Registration Mark",
+      "kind": "custom",
+      "refersTo": "title-input",
+      "description": "Signature save-state crop mark: solid when saved, dashed while pending, struck in red on error.",
+      "html": "<span class=\"ds-regmark\" data-state=\"saved\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\"><circle class=\"ds-ring\" cx=\"12\" cy=\"12\" r=\"6.5\" pathLength=\"100\"/><path class=\"ds-cross\" d=\"M12 1.5v21M1.5 12h21\"/><circle class=\"ds-dot\" cx=\"12\" cy=\"12\" r=\"2.25\"/><path class=\"ds-strike\" d=\"M4 20 20 4\"/></svg></span><span class=\"ds-regmark\" data-state=\"pending\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\"><circle class=\"ds-ring\" cx=\"12\" cy=\"12\" r=\"6.5\" pathLength=\"100\"/><path class=\"ds-cross\" d=\"M12 1.5v21M1.5 12h21\"/><circle class=\"ds-dot\" cx=\"12\" cy=\"12\" r=\"2.25\"/><path class=\"ds-strike\" d=\"M4 20 20 4\"/></svg></span><span class=\"ds-regmark\" data-state=\"error\"><svg viewBox=\"0 0 24 24\" width=\"20\" height=\"20\"><circle class=\"ds-ring\" cx=\"12\" cy=\"12\" r=\"6.5\" pathLength=\"100\"/><path class=\"ds-cross\" d=\"M12 1.5v21M1.5 12h21\"/><circle class=\"ds-dot\" cx=\"12\" cy=\"12\" r=\"2.25\"/><path class=\"ds-strike\" d=\"M4 20 20 4\"/></svg></span>",
+      "css": ".ds-regmark{display:inline-flex;margin-right:16px;color:var(--text-muted)} .ds-regmark svg{overflow:visible;fill:none;stroke:currentColor;stroke-width:1.25} .ds-ring{stroke-dasharray:100 0;transition:stroke-dasharray 420ms cubic-bezier(0.16,1,0.3,1)} .ds-dot{fill:currentColor;stroke:none;transform-origin:12px 12px;transition:transform 420ms cubic-bezier(0.16,1,0.3,1)} .ds-strike{stroke:var(--danger);stroke-width:1.5;opacity:0} .ds-regmark[data-state=saved]{color:var(--text)} .ds-regmark[data-state=pending] .ds-ring{stroke-dasharray:6 6.5} .ds-regmark[data-state=pending] .ds-cross{stroke-dasharray:2 2} .ds-regmark[data-state=pending] .ds-dot{transform:scale(0)} .ds-regmark[data-state=error]{color:var(--danger)} .ds-regmark[data-state=error] .ds-strike{opacity:1}"
+    },
+    {
+      "name": "Toast",
+      "kind": "custom",
+      "refersTo": "toast",
+      "description": "Transient ink status chip; the only lifted element.",
+      "html": "<div class=\"ds-toast\" role=\"status\">Exported 4 notes</div>",
+      "css": ".ds-toast{display:inline-block;padding:8px 16px;border-radius:var(--radius);background:var(--ink);color:var(--on-ink);box-shadow:0 4px 16px var(--shadow-color);animation:ds-toast-in 260ms cubic-bezier(0.16,1,0.3,1)} @keyframes ds-toast-in{from{opacity:0;transform:translateY(8px)}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Letterpress Proof",
+    "overview": "A note is ink pressed onto stock. The editor is a clean proof sheet; the shell is the ink. The sidebar is a single deep blue-black ink slab carrying the wordmark, search, and navigation, while the note list and editor sit on warm off-white proof stock. In dark mode the relationship inverts in value but not in role: the stock becomes ink-toned and the type becomes paper-white, and the sidebar drops to a near-black ink so it still reads as the darker, denser layer.\n\nThe window is dense and quiet, built for all-day, keyboard-first use. Colour never decorates; it does one of three jobs: shell (ink), selection and focus (one indigo accent), or danger (proof red). Everything else is a value step within ink or stock. One sturdy system grotesk carries every role, and every spacing value sits on a 4px grid.\n\nThe signature is the registration mark beside the note title: a printer's crop mark that reports whether the note is on disk. Save state is carried in line form (dashed, solid, struck through), not in hue. The world refuses the grey-on-grey sidebar-plus-white-page default.",
+    "keyCharacteristics": [
+      "Three-column grid: ink sidebar (232px), proof-stock list (260 to 320px), editor sheet (fluid, content capped at 760px).",
+      "Ink appears only on the sidebar and the transient toast; stock carries all content.",
+      "One accent hue (indigo, hue 272) for selection, pressed toggles, focus, caret, and text selection.",
+      "Proof red (hue 27) only for destructive hover and save errors.",
+      "Flat surfaces separated by 1px rules and value steps; one shadow, on the toast.",
+      "Everything on a 4px grid; tabular numerals for dates and counts."
+    ],
+    "rules": [
+      {
+        "name": "The Three Jobs Rule",
+        "body": "Colour only signals shell, selection, or danger. A new hue needs a new job, and there are no new jobs.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ink Stays In The Shell Rule",
+        "body": "The ink surface is reserved for the sidebar and the transient toast. Content panes are always stock.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tabular Time Rule",
+        "body": "Dates and counts always use tabular numerals so columns of times do not jitter.",
+        "section": "typography"
+      },
+      {
+        "name": "The One Face Rule",
+        "body": "Every role uses the system UI stack; differentiate by size and weight only.",
+        "section": "typography"
+      },
+      {
+        "name": "The Crouwel Grid Rule",
+        "body": "Every margin, gap, and padding is a multiple of 4px. The 54px title inset is the one exception, and it exists to align with the editor library's gutter.",
+        "section": "layout"
+      },
+      {
+        "name": "The Flat Stock Rule",
+        "body": "Panes, rows, and buttons never cast shadows. If something needs to stand apart, step its stock value or rule it off.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Line-Not-Hue Rule",
+        "body": "Persistence state is expressed by the line's form (dashed, solid, struck). Colour only joins on error, and the strike still carries the meaning without it.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "Do take every surface colour from the ink or stock families and every meaning from accent or danger, in both themes.",
+      "Do keep every spacing value on the 4px grid (4 through 48).",
+      "Do use the 6px radius for every interactive shape.",
+      "Do show focus with the 2px accent outline at 2px offset (on-ink inside the sidebar).",
+      "Do set dates and counts in tabular numerals.",
+      "Do report save state through the registration mark's line form.",
+      "Do route BlockNote's theme through the same custom properties so the editor follows light and dark with the shell."
+    ],
+    "donts": [
+      "Don't use ink as a ground for content panes; it belongs to the sidebar and the toast.",
+      "Don't use Proof Red for anything except destructive actions and failures.",
+      "Don't add shadows to panes, rows, or buttons; the toast is the only lifted element.",
+      "Don't introduce a second typeface or uppercase labels.",
+      "Don't signal saved or pending state with colour alone."
+    ]
+  }
+}
