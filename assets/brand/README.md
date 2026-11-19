@@ -3,6 +3,7 @@
 - `ichnote-logo.png` — full logo (mark + wordmark), 1024×1024, source artwork.
 - `app-icon.png` — app icon source: the mark on a macOS-style rounded square
   (824 px inside a 1024 px transparent canvas), generated from the logo.
+- `ichnote-mark.svg` — the mark alone as a vector (traced from the logo with potrace), `currentColor` fill; used in the app sidebar.
 - `make-icon.swift` — script that produces `app-icon.png` from the logo.
 
 Regenerate the icon and all platform sizes:

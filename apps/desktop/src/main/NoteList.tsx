@@ -1,4 +1,4 @@
-import { Inbox, Pin, Plus } from "lucide-react";
+import { Inbox, PanelLeftClose, Pin, Plus } from "lucide-react";
 import { type KeyboardEvent, useRef } from "react";
 import { displayTitle, formatNoteDate } from "../lib/format";
 import { type NoteMeta, type SearchHit, splitSnippet, type Uuid } from "../lib/ipc";
@@ -12,6 +12,7 @@ interface NoteListProps {
   onCreate: (() => void) | null;
   emptyText: string;
   loading: boolean;
+  onCollapse: () => void;
 }
 
 const MOD = navigator.platform.toLowerCase().includes("mac") ? "⌘" : "Ctrl+";
@@ -43,18 +44,29 @@ export function NoteList(props: NoteListProps) {
           </h1>
           <p className="list-count">{count === 1 ? "1 note" : `${count} notes`}</p>
         </div>
-        {props.onCreate && (
+        <div className="list-actions">
+          {props.onCreate && (
+            <button
+              type="button"
+              className="button"
+              onClick={props.onCreate}
+              aria-keyshortcuts="Meta+N"
+              title={`New note (${MOD}N)`}
+            >
+              <Plus size={16} aria-hidden="true" />
+              New note
+            </button>
+          )}
           <button
             type="button"
-            className="button"
-            onClick={props.onCreate}
-            aria-keyshortcuts="Meta+N"
-            title={`New note (${MOD}N)`}
+            className="icon-button"
+            aria-label="Hide note list"
+            title={`Hide note list (${MOD}⇧\\)`}
+            onClick={props.onCollapse}
           >
-            <Plus size={16} aria-hidden="true" />
-            New note
+            <PanelLeftClose size={16} aria-hidden="true" />
           </button>
-        )}
+        </div>
       </header>
 
       {count === 0 && !props.loading ? (

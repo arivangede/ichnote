@@ -1,6 +1,6 @@
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { open, save } from "@tauri-apps/plugin-dialog";
-import { Download } from "lucide-react";
+import { Download, List, PanelLeftOpen } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   createFolder,
@@ -9,6 +9,7 @@ import {
   deleteNote,
   type Folder,
   getNote,
+  getSettings,
   listFolders,
   listNotes,
   listWorkspaces,
@@ -21,6 +22,7 @@ import {
   restoreNote,
   type SearchHit,
   search,
+  setSetting,
   type Uuid,
   updateNoteMeta,
   type Workspace,
@@ -33,6 +35,9 @@ import { NoteList } from "./NoteList";
 import { Sidebar } from "./Sidebar";
 
 const SEARCH_DELAY_MS = 120;
+const SIDEBAR_SETTING = "ui.sidebar_collapsed";
+const LIST_SETTING = "ui.list_collapsed";
+const MOD = navigator.platform.toLowerCase().includes("mac") ? "⌘" : "Ctrl+";
 const TOAST_MS = 5000;
 
 function errorMessage(err: unknown): string {
@@ -82,6 +87,8 @@ export function MainWindow() {
   const [loading, setLoading] = useState(true);
   const [toast, setToast] = useState<string | null>(null);
   const searchRef = useRef<HTMLInputElement>(null);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [listCollapsed, setListCollapsed] = useState(false);
 
   const report = useCallback((message: string) => setToast(message), []);
   const fail = useCallback((err: unknown) => report(errorMessage(err)), [report]);
@@ -91,6 +98,29 @@ export function MainWindow() {
     const t = setTimeout(() => setToast(null), TOAST_MS);
     return () => clearTimeout(t);
   }, [toast]);
+
+  useEffect(() => {
+    getSettings()
+      .then((s) => {
+        setSidebarCollapsed(s[SIDEBAR_SETTING] === "true");
+        setListCollapsed(s[LIST_SETTING] === "true");
+      })
+      .catch(fail);
+  }, [fail]);
+
+  const toggleSidebar = useCallback(() => {
+    setSidebarCollapsed((v) => {
+      setSetting(SIDEBAR_SETTING, String(!v)).catch(fail);
+      return !v;
+    });
+  }, [fail]);
+
+  const toggleList = useCallback(() => {
+    setListCollapsed((v) => {
+      setSetting(LIST_SETTING, String(!v)).catch(fail);
+      return !v;
+    });
+  }, [fail]);
 
   useEffect(() => {
     listWorkspaces()
@@ -185,10 +215,18 @@ export function MainWindow() {
     }
   }, [workspaceId, view, reload, fail]);
 
-  // Global shortcuts: Cmd/Ctrl+N new note, Cmd/Ctrl+F search.
+  // Global shortcuts: Cmd/Ctrl+N new note, Cmd/Ctrl+F search, Cmd/Ctrl+\ sidebar,
+  // Cmd/Ctrl+Shift+\ note list.
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (!(e.metaKey || e.ctrlKey) || e.altKey || e.shiftKey) return;
+      if (!(e.metaKey || e.ctrlKey) || e.altKey) return;
+      if (e.code === "Backslash") {
+        e.preventDefault();
+        if (e.shiftKey) toggleList();
+        else toggleSidebar();
+        return;
+      }
+      if (e.shiftKey) return;
       const key = e.key.toLowerCase();
       if (key === "n") {
         e.preventDefault();
@@ -201,7 +239,7 @@ export function MainWindow() {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [create]);
+  }, [create, toggleList, toggleSidebar]);
 
   const patch = useCallback(
     (p: NotePatch) => {
@@ -289,30 +327,68 @@ export function MainWindow() {
     [workspaceId, fail, report],
   );
 
+  const expandButtons = (sidebarCollapsed || listCollapsed) && (
+    <>
+      {sidebarCollapsed && (
+        <button
+          type="button"
+          className="icon-button"
+          aria-label="Show sidebar"
+          title={`Show sidebar (${MOD}\\)`}
+          onClick={toggleSidebar}
+        >
+          <PanelLeftOpen size={16} aria-hidden="true" />
+        </button>
+      )}
+      {listCollapsed && (
+        <button
+          type="button"
+          className="icon-button"
+          aria-label="Show note list"
+          title={`Show note list (${MOD}⇧\\)`}
+          onClick={toggleList}
+        >
+          <List size={16} aria-hidden="true" />
+        </button>
+      )}
+    </>
+  );
+
   return (
-    <div className="app">
-      <Sidebar
-        view={view}
-        onView={setView}
-        folders={folders}
-        query={query}
-        onQuery={setQuery}
-        searchRef={searchRef}
-        onCreateFolder={folderActions.create}
-        onRenameFolder={folderActions.rename}
-        onDeleteFolder={folderActions.remove}
-        onExportAll={() => void exportAll()}
-      />
-      <NoteList
-        heading={heading}
-        notes={notes}
-        hits={hits}
-        selectedId={selected?.id ?? null}
-        onSelect={select}
-        onCreate={canCreate ? () => void create() : null}
-        emptyText={listEmpty}
-        loading={loading}
-      />
+    <div
+      className="app"
+      data-sidebar={sidebarCollapsed ? "collapsed" : "open"}
+      data-list={listCollapsed ? "collapsed" : "open"}
+    >
+      <div className="pane-slot" inert={sidebarCollapsed}>
+        <Sidebar
+          view={view}
+          onView={setView}
+          folders={folders}
+          query={query}
+          onQuery={setQuery}
+          searchRef={searchRef}
+          onCreateFolder={folderActions.create}
+          onRenameFolder={folderActions.rename}
+          onDeleteFolder={folderActions.remove}
+          onExportAll={() => void exportAll()}
+          workspaceName={workspace?.name ?? ""}
+          onCollapse={toggleSidebar}
+        />
+      </div>
+      <div className="pane-slot" inert={listCollapsed}>
+        <NoteList
+          heading={heading}
+          notes={notes}
+          hits={hits}
+          selectedId={selected?.id ?? null}
+          onSelect={select}
+          onCreate={canCreate ? () => void create() : null}
+          emptyText={listEmpty}
+          loading={loading}
+          onCollapse={toggleList}
+        />
+      </div>
       {selected ? (
         <NoteEditor
           key={selected.id}
@@ -323,6 +399,7 @@ export function MainWindow() {
           onDelete={removeSelected}
           onRestore={restoreSelected}
           onError={report}
+          toolbarStart={expandButtons}
           toolbarExtra={
             <button
               type="button"
@@ -336,12 +413,16 @@ export function MainWindow() {
           }
         />
       ) : (
-        <div className="editor-pane editor-empty">
-          <p>Select a note, or start a new one.</p>
-          <p>
-            <kbd>{navigator.platform.toLowerCase().includes("mac") ? "⌘" : "Ctrl+"}N</kbd> New note
-            · <kbd>{navigator.platform.toLowerCase().includes("mac") ? "⌘" : "Ctrl+"}F</kbd> Search
-          </p>
+        <div className="editor-pane">
+          <div className="editor-toolbar">
+            <div className="toolbar-actions">{expandButtons}</div>
+          </div>
+          <div className="editor-empty">
+            <p>Select a note, or start a new one.</p>
+            <p>
+              <kbd>{MOD}N</kbd> New note · <kbd>{MOD}F</kbd> Search
+            </p>
+          </div>
         </div>
       )}
       <div className="toast-region" aria-live="polite">

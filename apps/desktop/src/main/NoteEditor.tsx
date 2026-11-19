@@ -21,6 +21,7 @@ interface NoteEditorProps {
   onRestore: () => void;
   onError: (message: string) => void;
   toolbarExtra?: React.ReactNode;
+  toolbarStart?: React.ReactNode;
 }
 
 function errorMessage(err: unknown): string {
@@ -74,6 +75,7 @@ export function NoteEditor(props: NoteEditorProps) {
   return (
     <article className="editor-pane" aria-label={note.title || "Untitled note"}>
       <div className="editor-toolbar">
+        <div className="toolbar-actions">{props.toolbarStart}</div>
         <div className="toolbar-actions">
           {trashed ? (
             <button type="button" className="button" onClick={props.onRestore}>
@@ -137,7 +139,13 @@ export function NoteEditor(props: NoteEditorProps) {
         </p>
       )}
 
-      <div className="editor-scroll">
+      {/* biome-ignore lint/a11y/noStaticElementInteractions: pointer convenience; the editor itself is keyboard reachable */}
+      <div
+        className="editor-scroll"
+        onMouseDown={(e) => {
+          if (!trashed) focusEndOnClickBelow(e, editorRef.current);
+        }}
+      >
         <div className="editor-sheet">
           <div className="title-row">
             {!trashed && <RegMark state={saveState} />}
@@ -171,6 +179,31 @@ export function NoteEditor(props: NoteEditorProps) {
       </div>
     </article>
   );
+}
+
+/**
+ * Clicking the empty space below the content puts the caret on the last line, like Notion:
+ * an empty last paragraph is reused, otherwise a new paragraph is added.
+ */
+function focusEndOnClickBelow(e: React.MouseEvent<HTMLElement>, editor: BlockNoteEditor | null) {
+  if (!editor || e.button !== 0) return;
+  if ((e.target as HTMLElement).closest(".title-row, button, a, input, select, textarea")) return;
+  const content = e.currentTarget.querySelector(".bn-editor");
+  if (!content || e.clientY <= content.getBoundingClientRect().bottom) return;
+  e.preventDefault();
+  const last = editor.document.at(-1);
+  if (!last) return;
+  const lastIsEmptyParagraph =
+    last.type === "paragraph" &&
+    Array.isArray(last.content) &&
+    last.content.length === 0 &&
+    last.children.length === 0;
+  const block = lastIsEmptyParagraph
+    ? last
+    : editor.insertBlocks([{ type: "paragraph" }], last, "after")[0];
+  if (!block) return;
+  editor.setTextCursorPosition(block, "end");
+  editor.focus();
 }
 
 /** Title edits are saved after a short pause, on blur, and before the window closes. */
