@@ -5,6 +5,7 @@ use std::path::Path;
 
 use rusqlite::{Connection, OptionalExtension, params};
 use uuid::Uuid;
+use yrs::ClientID;
 
 use crate::error::{Error, Result};
 use crate::ids::new_id;
@@ -24,6 +25,8 @@ pub const DEVICE_ID_KEY: &str = "device_id";
 pub struct Store {
     pub(crate) conn: Connection,
     device_id: Uuid,
+    /// yrs client ID for edits made by Rust in this session (fresh per session, never reused).
+    client_id: ClientID,
 }
 
 impl Store {
@@ -51,13 +54,22 @@ impl Store {
         conn.busy_timeout(std::time::Duration::from_secs(5))?;
         migrate(&mut conn)?;
         let device_id = ensure_device_id(&conn)?;
-        Ok(Self { conn, device_id })
+        let client_id = yrs::Doc::new().client_id();
+        Ok(Self {
+            conn,
+            device_id,
+            client_id,
+        })
     }
 
     /// The UUIDv7 identifying this device, created on first open.
     #[must_use]
     pub fn device_id(&self) -> Uuid {
         self.device_id
+    }
+
+    pub(crate) fn client_id(&self) -> ClientID {
+        self.client_id
     }
 
     /// Schema version currently applied to the database.
