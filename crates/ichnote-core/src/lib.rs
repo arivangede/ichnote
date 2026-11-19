@@ -2,12 +2,12 @@
 //!
 //! This crate must not depend on Tauri so it can be tested on its own.
 
-/// Errors produced by `ichnote-core`.
-#[derive(Debug, thiserror::Error)]
-pub enum Error {}
+pub mod db;
+pub mod error;
+pub mod ids;
 
-/// Convenience result type for `ichnote-core`.
-pub type Result<T> = std::result::Result<T, Error>;
+pub use db::Store;
+pub use error::{Error, Result};
 
 /// Version of this crate, as declared in `Cargo.toml`.
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");

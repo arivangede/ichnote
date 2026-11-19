@@ -12,6 +12,9 @@ authors = ["Ichnote contributors"]
 [workspace.dependencies]
 ichnote-core = { path = "crates/ichnote-core" }
 anyhow = "1.0.104"
+rusqlite = { version = "0.43.0", features = ["bundled"] }
+tempfile = "3.27.0"
+uuid = { version = "1.29.3", features = ["v7", "serde"] }
 tauri = { version = "2.12.7", features = [] }
 tauri-build = { version = "2.7.6", features = [] }
 thiserror = "2.0.21"
