@@ -283,3 +283,52 @@ fn unsynced_workspaces_do_not_fill_the_outbox() {
         .unwrap();
     assert_eq!(n, 0);
 }
+
+#[test]
+fn search_matches_titles_and_bodies_with_prefixes_and_diacritics() {
+    let mut store = Store::open_in_memory().unwrap();
+    let ws = store.create_workspace("Personal").unwrap().id;
+    let other_ws = store.create_workspace("Other").unwrap().id;
+    let grocery = store.create_note(ws, None, false).unwrap().id;
+    store.apply_local_update(grocery, FIXTURE).unwrap();
+    let titled = store.create_note(ws, None, false).unwrap().id;
+    store
+        .update_note_meta(
+            titled,
+            &NotePatch {
+                title: Some("Cafe opening hours".into()),
+                ..NotePatch::default()
+            },
+        )
+        .unwrap();
+    let elsewhere = store.create_note(other_ws, None, false).unwrap().id;
+    store.apply_local_update(elsewhere, FIXTURE).unwrap();
+
+    // "cafe" matches "café" (diacritics removed), title hits rank first.
+    let hits = store.search(ws, "cafe", 20).unwrap();
+    assert_eq!(
+        ids(&hits.iter().map(|h| h.note.clone()).collect::<Vec<_>>()),
+        vec![titled, grocery]
+    );
+    assert!(
+        hits[1].snippet.contains("\u{2}café\u{3}"),
+        "{}",
+        hits[1].snippet
+    );
+
+    // Prefix match, all words required.
+    assert_eq!(store.search(ws, "groc mil", 20).unwrap().len(), 1);
+    assert!(store.search(ws, "grocery nothing", 20).unwrap().is_empty());
+    // FTS syntax in user input is harmless.
+    assert!(
+        store
+            .search(ws, "\"unbalanced NEAR( *", 20)
+            .unwrap()
+            .is_empty()
+    );
+    assert!(store.search(ws, "", 20).unwrap().is_empty());
+
+    // Trashed notes are not found.
+    store.delete_note(grocery).unwrap();
+    assert!(store.search(ws, "milk", 20).unwrap().is_empty());
+}
