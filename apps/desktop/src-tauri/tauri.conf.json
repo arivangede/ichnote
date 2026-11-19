@@ -16,7 +16,15 @@
         "title": "Ichnote",
         "url": "/",
         "width": 1100,
-        "height": 750
+        "height": 750,
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true,
+        "trafficLightPosition": {
+          "x": 18,
+          "y": 18
+        },
+        "minWidth": 640,
+        "minHeight": 420
       }
     ],
     "security": {

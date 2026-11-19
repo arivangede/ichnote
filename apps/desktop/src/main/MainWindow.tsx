@@ -1,6 +1,6 @@
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { open, save } from "@tauri-apps/plugin-dialog";
-import { Download, List, PanelLeftOpen } from "lucide-react";
+import { Download, List, PanelLeft } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   createFolder,
@@ -37,7 +37,8 @@ import { Sidebar } from "./Sidebar";
 const SEARCH_DELAY_MS = 120;
 const SIDEBAR_SETTING = "ui.sidebar_collapsed";
 const LIST_SETTING = "ui.list_collapsed";
-const MOD = navigator.platform.toLowerCase().includes("mac") ? "⌘" : "Ctrl+";
+const IS_MAC = navigator.platform.toLowerCase().includes("mac");
+const MOD = IS_MAC ? "⌘" : "Ctrl+";
 const TOAST_MS = 5000;
 
 function errorMessage(err: unknown): string {
@@ -327,36 +328,22 @@ export function MainWindow() {
     [workspaceId, fail, report],
   );
 
-  const expandButtons = (sidebarCollapsed || listCollapsed) && (
-    <>
-      {sidebarCollapsed && (
-        <button
-          type="button"
-          className="icon-button"
-          aria-label="Show sidebar"
-          title={`Show sidebar (${MOD}\\)`}
-          onClick={toggleSidebar}
-        >
-          <PanelLeftOpen size={16} aria-hidden="true" />
-        </button>
-      )}
-      {listCollapsed && (
-        <button
-          type="button"
-          className="icon-button"
-          aria-label="Show note list"
-          title={`Show note list (${MOD}⇧\\)`}
-          onClick={toggleList}
-        >
-          <List size={16} aria-hidden="true" />
-        </button>
-      )}
-    </>
+  const expandButtons = listCollapsed && (
+    <button
+      type="button"
+      className="icon-button"
+      aria-label="Show note list"
+      title={`Show note list (${MOD}⇧\\)`}
+      onClick={toggleList}
+    >
+      <List size={16} aria-hidden="true" />
+    </button>
   );
 
   return (
     <div
       className="app"
+      data-platform={IS_MAC ? "mac" : "other"}
       data-sidebar={sidebarCollapsed ? "collapsed" : "open"}
       data-list={listCollapsed ? "collapsed" : "open"}
     >
@@ -373,7 +360,6 @@ export function MainWindow() {
           onDeleteFolder={folderActions.remove}
           onExportAll={() => void exportAll()}
           workspaceName={workspace?.name ?? ""}
-          onCollapse={toggleSidebar}
         />
       </div>
       <div className="pane-slot" inert={listCollapsed}>
@@ -414,7 +400,7 @@ export function MainWindow() {
         />
       ) : (
         <div className="editor-pane">
-          <div className="editor-toolbar">
+          <div className="editor-toolbar" data-tauri-drag-region>
             <div className="toolbar-actions">{expandButtons}</div>
           </div>
           <div className="editor-empty">
@@ -425,6 +411,19 @@ export function MainWindow() {
           </div>
         </div>
       )}
+      {/* Window controls: right of the macOS traffic lights; stays put when the sidebar hides. */}
+      <div className="titlebar-controls">
+        <button
+          type="button"
+          className="icon-button titlebar-button"
+          aria-label={sidebarCollapsed ? "Show sidebar" : "Hide sidebar"}
+          aria-expanded={!sidebarCollapsed}
+          title={`${sidebarCollapsed ? "Show" : "Hide"} sidebar (${MOD}\\)`}
+          onClick={toggleSidebar}
+        >
+          <PanelLeft size={16} aria-hidden="true" />
+        </button>
+      </div>
       <div className="toast-region" aria-live="polite">
         {toast && (
           <div className="toast" role="status">

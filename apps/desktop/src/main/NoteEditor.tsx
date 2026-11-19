@@ -74,7 +74,7 @@ export function NoteEditor(props: NoteEditorProps) {
 
   return (
     <article className="editor-pane" aria-label={note.title || "Untitled note"}>
-      <div className="editor-toolbar">
+      <div className="editor-toolbar" data-tauri-drag-region>
         <div className="toolbar-actions">{props.toolbarStart}</div>
         <div className="toolbar-actions">
           {trashed ? (

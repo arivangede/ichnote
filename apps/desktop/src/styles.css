@@ -181,7 +181,7 @@ kbd {
   flex-direction: column;
   gap: var(--space-4);
   min-height: 0;
-  padding: var(--space-5) var(--space-3) var(--space-3);
+  padding: 0 var(--space-3) var(--space-3);
   background: var(--ink);
   color: var(--on-ink);
   scrollbar-color: var(--ink-rule) transparent;
@@ -366,6 +366,55 @@ kbd {
   padding: var(--space-1) var(--space-2);
   color: var(--on-ink-muted);
   font-size: 13px;
+}
+
+/* Title bar: the window has an overlay title bar on macOS, so the top of every pane is a drag
+   region and the sidebar toggle sits right of the traffic lights. */
+
+.titlebar-strip {
+  flex: none;
+  height: 32px;
+}
+
+.list-strip {
+  display: none;
+}
+
+.app[data-sidebar="collapsed"] .list-strip {
+  display: block;
+}
+
+.titlebar-controls {
+  position: fixed;
+  top: 0;
+  left: var(--space-3);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  /* Centred on the macOS traffic lights. */
+  height: 30px;
+}
+
+.app[data-platform="mac"] .titlebar-controls {
+  left: 84px;
+}
+
+.titlebar-button {
+  color: var(--on-ink-muted);
+}
+
+.titlebar-button:hover {
+  background: var(--ink-hover);
+  color: var(--on-ink);
+}
+
+.app[data-sidebar="collapsed"] .titlebar-button {
+  color: var(--text-muted);
+}
+
+.app[data-sidebar="collapsed"] .titlebar-button:hover {
+  background: var(--stock-sunk);
+  color: var(--text);
 }
 
 /* Buttons */
@@ -594,11 +643,19 @@ kbd {
 .editor-toolbar {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   gap: var(--space-4);
   height: 48px;
   padding: 0 var(--space-4);
   border-bottom: 1px solid var(--rule);
+}
+
+.app[data-sidebar="collapsed"][data-list="collapsed"] .editor-toolbar {
+  padding-left: 56px;
+}
+
+.app[data-platform="mac"][data-sidebar="collapsed"][data-list="collapsed"] .editor-toolbar {
+  padding-left: 128px;
 }
 
 .toolbar-actions {

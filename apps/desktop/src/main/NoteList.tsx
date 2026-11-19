@@ -37,7 +37,8 @@ export function NoteList(props: NoteListProps) {
   const count = rows.length;
   return (
     <section className="list-pane" aria-labelledby="list-heading">
-      <header className="list-header">
+      <div className="titlebar-strip list-strip" data-tauri-drag-region />
+      <header className="list-header" data-tauri-drag-region>
         <div>
           <h1 id="list-heading" className="list-title">
             {props.heading}

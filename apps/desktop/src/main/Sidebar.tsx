@@ -5,7 +5,6 @@ import {
   FolderPlus,
   Inbox,
   Notebook,
-  PanelLeftClose,
   Pin,
   Search,
   Trash2,
@@ -27,7 +26,6 @@ interface SidebarProps {
   onDeleteFolder: (id: Uuid) => void;
   onExportAll: () => void;
   workspaceName: string;
-  onCollapse: () => void;
 }
 
 const MOD = navigator.platform.toLowerCase().includes("mac") ? "⌘" : "Ctrl+";
@@ -63,20 +61,12 @@ export function Sidebar(props: SidebarProps) {
 
   return (
     <aside className="sidebar">
+      <div className="titlebar-strip" data-tauri-drag-region />
       <div className="brand">
         <span className="brand-mark">
           <LogoMark size={22} />
         </span>
         <span className="brand-name">{props.workspaceName}</span>
-        <button
-          type="button"
-          className="icon-button on-ink"
-          aria-label="Hide sidebar"
-          title={`Hide sidebar (${MOD}\\)`}
-          onClick={props.onCollapse}
-        >
-          <PanelLeftClose size={16} aria-hidden="true" />
-        </button>
       </div>
 
       <search className="search">
