@@ -391,8 +391,8 @@ kbd {
   z-index: 10;
   display: flex;
   align-items: center;
-  /* Centred on the macOS traffic lights. */
-  height: 30px;
+  /* Centred on the macOS traffic lights (measured centre: 15.75px from the top). */
+  height: 32.5px;
 }
 
 .app[data-platform="mac"] .titlebar-controls {
@@ -400,6 +400,8 @@ kbd {
 }
 
 .titlebar-button {
+  width: 24px;
+  height: 24px;
   color: var(--on-ink-muted);
 }
 
