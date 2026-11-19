@@ -2,7 +2,7 @@ import "@blocknote/mantine/style.css";
 import type { BlockNoteEditor } from "@blocknote/core";
 import { withCollaboration } from "@blocknote/core/yjs";
 import { BlockNoteView, type Theme } from "@blocknote/mantine";
-import { useCreateBlockNote } from "@blocknote/react";
+import { SuggestionMenuController, useCreateBlockNote } from "@blocknote/react";
 import { Inbox, Pin, RotateCcw, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { attachmentUrl, resolveFileUrl } from "../lib/attachments";
@@ -17,6 +17,7 @@ import {
 import { NoteSync, type SaveState } from "../lib/noteSync";
 import { registerFlush } from "../lib/pendingWrites";
 import { RegMark } from "./RegMark";
+import { SlashMenu } from "./SlashMenu";
 
 const TITLE_SAVE_DELAY_MS = 400;
 
@@ -201,7 +202,10 @@ export function NoteEditor(props: NoteEditorProps) {
  */
 function focusEndOnClickBelow(e: React.MouseEvent<HTMLElement>, editor: BlockNoteEditor | null) {
   if (!editor || e.button !== 0) return;
-  if ((e.target as HTMLElement).closest(".title-row, button, a, input, select, textarea")) return;
+  // Only the empty sheet itself counts. Menus, popovers, and toolbars rendered by BlockNote sit
+  // on top of this area, so a click on them must never be treated as a click below the note.
+  const target = e.target as HTMLElement;
+  if (target !== e.currentTarget && !target.classList.contains("editor-sheet")) return;
   const content = e.currentTarget.querySelector(".bn-editor");
   if (!content || e.clientY <= content.getBoundingClientRect().bottom) return;
   e.preventDefault();
@@ -307,6 +311,9 @@ function BlockEditor(props: {
       editable={props.editable}
       theme={{ light: LIGHT_THEME, dark: LIGHT_THEME }}
       className="block-editor"
-    />
+      slashMenu={false}
+    >
+      <SuggestionMenuController triggerCharacter="/" suggestionMenuComponent={SlashMenu} />
+    </BlockNoteView>
   );
 }

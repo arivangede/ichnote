@@ -730,6 +730,48 @@ kbd {
   color: var(--danger);
 }
 
+/* "/" command menu: a search field on top of BlockNote's list */
+
+.slash-search {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: calc(-1 * var(--space-1)) calc(-1 * var(--space-1)) var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  border-bottom: 1px solid var(--rule);
+  background: var(--stock-raised);
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.slash-query {
+  color: var(--text);
+}
+
+.slash-placeholder {
+  display: inline-flex;
+  align-items: center;
+}
+
+.slash-caret {
+  display: inline-block;
+  width: 1px;
+  height: 14px;
+  margin: 0 1px;
+  vertical-align: -2px;
+  background: var(--accent);
+  animation: slash-caret 1s steps(1) infinite;
+}
+
+@keyframes slash-caret {
+  50% {
+    opacity: 0;
+  }
+}
+
 /* Signature: the registration mark */
 
 .regmark {
