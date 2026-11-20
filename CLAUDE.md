@@ -1,6 +1,6 @@
-# CLAUDE.md — Ichnote
+# CLAUDE.md — note-tice!
 
-Ichnote is a lightweight, local-first, open-source note-taking app (Notion-like) built with Rust + Tauri v2.
+note-tice! is a lightweight, local-first, open-source note-taking app (Notion-like) built with Rust + Tauri v2.
 The full design is in `docs/DESIGN.md` (written in Indonesian). **Read it before starting any task.**
 The current phase and progress are tracked in the Roadmap section (section 9) of that document.
 
@@ -21,17 +21,17 @@ Use the latest stable versions when adding dependencies and record them in lockf
 
 ## Architecture rules (do not break)
 
-- `crates/ichnote-core` and `crates/ichnote-sync` must **not** depend on Tauri. They must be testable on their own.
+- `crates/notetice-core` and `crates/notetice-sync` must **not** depend on Tauri. They must be testable on their own.
 - All IDs are **UUIDv7**. Never use auto-increment IDs for synced data (local-only tables like `outbox` are the exception).
 - Never hard-delete synced data. Use tombstones (`deleted_at`) in the workspace meta CRDT document.
 - All changes to notes and metadata go through CRDT documents (Yjs in the frontend, `yrs` in Rust). SQLite tables like `notes_index` and `notes_fts` are derived caches that can be rebuilt.
 - In folder sync, a device writes **only** inside its own `devices/<device_id>/` folder. Never write to or delete from another device's folder.
 - File writes for sync are atomic: write `*.tmp` → fsync → rename.
-- The sync file format (`.ichn`) is a public contract. Any change requires bumping the format version and updating `docs/sync-format.md`.
+- The sync file format (`.ntc`) is a public contract. Any change requires bumping the format version and updating `docs/sync-format.md`.
 
 ## Development conveniences
 
-- Support an environment variable `ICHNOTE_DATA_DIR` to override the app data directory. In dev builds, allow running two instances side by side with different data dirs (single-instance check disabled in dev) so folder sync can be tested on one machine.
+- Support an environment variable `NOTETICE_DATA_DIR` to override the app data directory. In dev builds, allow running two instances side by side with different data dirs (single-instance check disabled in dev) so folder sync can be tested on one machine.
 - Prefer integration tests that simulate multiple devices with separate databases and a shared temp folder.
 
 ## Conventions
@@ -49,7 +49,7 @@ cargo clippy --all-targets -- -D warnings
 pnpm install
 pnpm lint && pnpm typecheck && pnpm test   # frontend checks (biome, tsc, vitest)
 pnpm tauri dev          # run the desktop app
-ICHNOTE_DATA_DIR=/tmp/ichnote-a pnpm tauri dev   # run against a throwaway data dir
+NOTETICE_DATA_DIR=/tmp/notetice-a pnpm tauri dev   # run against a throwaway data dir
 node apps/desktop/scripts/make-fixture.mjs        # regenerate the BlockNote Yjs fixture (run from apps/desktop)
 ```
 

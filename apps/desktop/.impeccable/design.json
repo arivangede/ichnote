@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "generatedAt": "2026-11-19T02:13:23.838Z",
-  "title": "Design System: Ichnote",
+  "title": "Design System: note-tice!",
   "extensions": {
     "colorMeta": {
       "ink": {
@@ -304,7 +304,7 @@
       },
       "wordmark": {
         "displayName": "Wordmark",
-        "purpose": "Lowercase 'ichnote' wordmark atop the sidebar only."
+        "purpose": "Lowercase 'note-tice!' wordmark atop the sidebar only."
       },
       "body": {
         "displayName": "Body",

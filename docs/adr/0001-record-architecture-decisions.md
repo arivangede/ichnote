@@ -5,7 +5,7 @@
 
 ## Context
 
-Ichnote is an open-source project whose design (`docs/DESIGN.md`) will evolve. Decisions and
+note-tice! is an open-source project whose design (`docs/DESIGN.md`) will evolve. Decisions and
 their reasons need to stay discoverable for future contributors.
 
 ## Decision

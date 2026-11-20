@@ -1,13 +1,13 @@
-# Ichnote — Dokumen Desain & Panduan Build
+# note-tice! — Dokumen Desain & Panduan Build
 
-> **Status:** Draft v0.4 · **Nama:** Ichnote — *leave a trace.*
+> **Status:** Draft v0.4 · **Nama:** note-tice! — *take note.*
 > Aplikasi pencatatan ringan ala Notion, local-first, open-source, dibangun dengan Rust + Tauri, dengan jendela cepat *always-on-top* dan sinkronisasi lewat folder lokal.
 
 ---
 
 ## 1. Ringkasan
 
-Ichnote adalah aplikasi catatan desktop yang:
+note-tice! adalah aplikasi catatan desktop yang:
 
 - **Local-first** — semua data tersimpan di perangkat (SQLite), aplikasi bekerja penuh tanpa internet.
 - **Ringan** — Tauri (WebView bawaan OS), bukan Electron.
@@ -54,7 +54,7 @@ Ichnote adalah aplikasi catatan desktop yang:
 | CRDT (frontend) | **Yjs** | |
 | CRDT (backend) | **yrs** | Port Rust dari Yjs, format biner kompatibel |
 | Database lokal | **SQLite** via `rusqlite` (feature `bundled`) | + FTS5 untuk pencarian |
-| Migrasi DB | runner `user_version` sendiri (`ichnote-core/src/db.rs`) | `rusqlite_migration` 2.7 masih mengunci `rusqlite` 0.41, bentrok dengan `rusqlite` terbaru |
+| Migrasi DB | runner `user_version` sendiri (`notetice-core/src/db.rs`) | `rusqlite_migration` 2.7 masih mengunci `rusqlite` 0.41, bentrok dengan `rusqlite` terbaru |
 | ID | `uuid` dengan feature `v7` | Terurut waktu |
 | Pantau folder | `notify` (+ `notify-debouncer-full`) | |
 | Checksum | `blake3` | |
@@ -75,7 +75,7 @@ Ichnote adalah aplikasi catatan desktop yang:
 ## 4. Arsitektur
 
 ```
-┌─────────────────────────── Ichnote.app ───────────────────────────┐
+┌─────────────────────────── note-tice!.app ───────────────────────────┐
 │                                                                    │
 │  ┌─────────────────┐   ┌──────────────────┐                        │
 │  │ Jendela utama   │   │ Jendela cepat    │   (WebView, React)     │
@@ -86,20 +86,20 @@ Ichnote adalah aplikasi catatan desktop yang:
 │  │ src-tauri (lapisan aplikasi: commands, window, shortcut, tray)│  │
 │  └────────┬───────────────────────────────┬─────────────────────┘  │
 │  ┌────────▼────────┐             ┌────────▼────────┐               │
-│  │ ichnote-core    │◀───────────▶│ ichnote-sync    │               │
+│  │ notetice-core    │◀───────────▶│ notetice-sync    │               │
 │  │ model, SQLite,  │             │ SyncEngine,     │               │
 │  │ dokumen yrs     │             │ FolderTransport │               │
 │  └────────┬────────┘             └────────┬────────┘               │
 └───────────┼───────────────────────────────┼────────────────────────┘
             ▼                               ▼
    ~/Library/Application           <Folder sinkron pilihan pengguna>
-   Support/Ichnote/ichnote.db      (iCloud/Dropbox/GDrive/Syncthing)
+   Support/Notetice/notetice.db      (iCloud/Dropbox/GDrive/Syncthing)
 ```
 
 ### 4.1 Struktur repositori
 
 ```
-ichnote/
+notetice/
 ├── Cargo.toml                 # Cargo workspace (+ Cargo.lock)
 ├── rust-toolchain.toml        # toolchain stable + rustfmt/clippy
 ├── clippy.toml
@@ -108,7 +108,7 @@ ichnote/
 ├── biome.json                 # lint + format frontend
 ├── .github/workflows/ci.yml
 ├── crates/
-│   ├── ichnote-core/          # model data, SQLite, migrasi, dokumen yrs
+│   ├── notetice-core/          # model data, SQLite, migrasi, dokumen yrs
 │   │   └── src/
 │   │       ├── db.rs
 │   │       ├── migrations/
@@ -116,7 +116,7 @@ ichnote/
 │   │       ├── meta.rs        # dokumen meta workspace
 │   │       ├── index.rs       # notes_index + FTS dari dokumen meta
 │   │       └── ids.rs
-│   └── ichnote-sync/          # mesin sinkronisasi
+│   └── notetice-sync/          # mesin sinkronisasi
 │       └── src/
 │           ├── engine.rs      # SyncEngine: outbox → transport → apply
 │           ├── transport.rs   # trait SyncTransport
@@ -129,8 +129,8 @@ ichnote/
 │           └── status.rs
 ├── apps/
 │   └── desktop/
-│       ├── package.json       # @ichnote/desktop
-│       ├── src-tauri/         # Rust (crate ichnote-desktop): commands, window, shortcut, tray
+│       ├── package.json       # @notetice/desktop
+│       ├── src-tauri/         # Rust (crate notetice-desktop): commands, window, shortcut, tray
 │       └── src/               # React: main window + quick window
 │           ├── main/
 │           ├── quick/
@@ -152,7 +152,7 @@ ichnote/
 
 | Dokumen | Jumlah | Isi | Pemilik di runtime |
 |---|---|---|---|
-| **Meta workspace** | 1 per workspace | daftar catatan, judul, folder, pin, Inbox, tombstone hapus | Rust (`ichnote-core`) |
+| **Meta workspace** | 1 per workspace | daftar catatan, judul, folder, pin, Inbox, tombstone hapus | Rust (`notetice-core`) |
 | **Isi catatan** | 1 per catatan | blok editor (struktur BlockNote) | Frontend (Yjs) dicerminkan ke Rust (yrs) |
 
 Struktur dokumen meta (Yjs):
@@ -172,7 +172,7 @@ Menghapus catatan = mengisi `deleted_at` (tombstone), bukan menghapus entri. Ini
 
 ### 5.2 Skema SQLite
 
-Lokasi: `<direktori data OS>/Ichnote/` via crate `dirs` (`~/Library/Application Support/Ichnote/` di macOS, `%APPDATA%\Ichnote\` di Windows), sengaja **bukan** `app_data_dir()` Tauri agar tidak ikut berubah bila bundle identifier diganti. Isinya `ichnote.db` dan `backups/`. Variabel lingkungan `ICHNOTE_DATA_DIR` menimpa lokasi ini; di build dev, cek single-instance dimatikan agar dua instans dengan data dir berbeda bisa berjalan berdampingan untuk menguji sinkronisasi folder di satu mesin.
+Lokasi: `<direktori data OS>/Notetice/` via crate `dirs` (`~/Library/Application Support/Notetice/` di macOS, `%APPDATA%\Notetice\` di Windows), sengaja **bukan** `app_data_dir()` Tauri agar tidak ikut berubah bila bundle identifier diganti. Isinya `notetice.db` dan `backups/`. Variabel lingkungan `NOTETICE_DATA_DIR` menimpa lokasi ini; di build dev, cek single-instance dimatikan agar dua instans dengan data dir berbeda bisa berjalan berdampingan untuk menguji sinkronisasi folder di satu mesin.
 
 ```sql
 PRAGMA journal_mode = WAL;
@@ -263,7 +263,7 @@ CREATE TABLE devices (
 >
 > **`updated_at` catatan** di dokumen meta dinaikkan oleh edit isi paling sering sekali per menit, karena setiap tulisan ke dokumen meta ikut tersinkron dan tersimpan di riwayatnya.
 >
-> **Backup harian:** saat aplikasi dibuka, bila backup terbaru lebih tua dari 24 jam, `VACUUM INTO backups/ichnote-<unix_ms>.db` (tulis `.tmp` lalu rename), simpan 7 terbaru.
+> **Backup harian:** saat aplikasi dibuka, bila backup terbaru lebih tua dari 24 jam, `VACUUM INTO backups/notetice-<unix_ms>.db` (tulis `.tmp` lalu rename), simpan 7 terbaru.
 >
 > **Client ID yrs** di Rust dibuat acak per sesi aplikasi (tidak pernah dipakai ulang), sehingga state dokumen yang dipulihkan dari backup/salinan DB tidak bisa bentrok dengan edit lama.
 
@@ -274,7 +274,7 @@ CREATE TABLE devices (
 3. Rust menerapkan update ke dokumen yrs, menyimpan state, memperbarui FTS (teks polos diambil dari semua node `XmlText` di fragment, satu baris per blok), dan memasukkan update ke `outbox` (bila tersinkron) — semuanya dalam satu transaksi.
 4. Update dari perangkat lain diterapkan Rust lalu dikirim ke frontend lewat event `doc-remote-update`; frontend menerapkannya dengan origin `"remote"` supaya tidak dikirim balik.
 
-> **IPC biner (diterapkan):** `load_doc` mengembalikan `tauri::ipc::Response` (byte mentah → `ArrayBuffer`), `apply_local_update` menerima body biner mentah (`tauri::ipc::Request`) dengan `doc_id` di header `ichnote-doc-id`. Tidak ada array JSON.
+> **IPC biner (diterapkan):** `load_doc` mengembalikan `tauri::ipc::Response` (byte mentah → `ArrayBuffer`), `apply_local_update` menerima body biner mentah (`tauri::ipc::Request`) dengan `doc_id` di header `notetice-doc-id`. Tidak ada array JSON.
 
 > **Catatan cepat** dibuat di frontend jendela cepat (yang juga punya Yjs + skema BlockNote), bukan di Rust. Membangun struktur Yjs yang kompatibel dengan BlockNote dari Rust rawan salah format.
 
@@ -357,7 +357,7 @@ pub fn run() {
             Ok(())
         })
         .run(tauri::generate_context!())
-        .expect("gagal menjalankan Ichnote");
+        .expect("gagal menjalankan note-tice!");
 }
 ```
 
@@ -379,25 +379,25 @@ pub fn run() {
 ### 7.2 Tata letak folder
 
 ```
-<FolderSinkron>/Ichnote/
+<FolderSinkron>/notetice/
 └── <workspace_id>/
     ├── workspace.json                  # ditulis sekali oleh pembuat, tidak pernah diubah
     └── devices/
         ├── <device_id_A>/
         │   ├── device.json             # hanya ditulis oleh A
-        │   ├── snap-000000000042.ichn
-        │   ├── upd-000000000043.ichn
-        │   └── upd-000000000044.ichn
+        │   ├── snap-000000000042.ntc
+        │   ├── upd-000000000043.ntc
+        │   └── upd-000000000044.ntc
         └── <device_id_B>/
             ├── device.json
-            └── upd-000000000007.ichn
+            └── upd-000000000007.ntc
 ```
 
 `workspace.json`:
 
 ```json
 {
-  "format": "ichnote-workspace",
+  "format": "notetice-workspace",
   "format_version": 1,
   "workspace_id": "0192f3c4-...",
   "created_at": 1763450000000,
@@ -413,7 +413,7 @@ Nama workspace **tidak** disimpan di sini (karena file ini tidak boleh diubah); 
 { "device_id": "0192f3c1-...", "name": "MacBook Andi", "platform": "macos", "app_version": "0.1.0" }
 ```
 
-### 7.3 Format file `.ichn` (versi 1)
+### 7.3 Format file `.ntc` (versi 1)
 
 Semua integer little-endian.
 
@@ -421,7 +421,7 @@ Semua integer little-endian.
 
 | Offset | Ukuran | Field | Keterangan |
 |---|---|---|---|
-| 0 | 4 | `magic` | `b"ICHN"` |
+| 0 | 4 | `magic` | `b"NTCE"` |
 | 4 | 2 | `version` | `1` |
 | 6 | 2 | `flags` | bit0 = terenkripsi, bit1 = terkompresi. v1: `0` |
 | 8 | 16 | `device_id` | UUID biner perangkat penulis |
@@ -442,7 +442,7 @@ Semua integer little-endian.
 **Footer (32 byte):** `blake3(header ‖ records)`.
 
 Aturan pembaca:
-- Abaikan file yang namanya tidak cocok pola `^(upd|snap)-\d{12}\.ichn$` (termasuk `.tmp`, "conflicted copy", placeholder `.icloud`).
+- Abaikan file yang namanya tidak cocok pola `^(upd|snap)-\d{12}\.ntc$` (termasuk `.tmp`, "conflicted copy", placeholder `.icloud`).
 - Tolak (dan coba lagi nanti) file dengan magic salah, panjang tidak cocok, atau checksum salah — biasanya karena file belum selesai tersinkron.
 - File dengan `version` lebih tinggi dari yang didukung: lewati dan tampilkan pesan "perbarui aplikasi".
 
@@ -493,7 +493,7 @@ pub trait SyncTransport: Send + Sync {
 1. Perubahan lokal masuk `outbox`.
 2. **Debounce**: flush saat tidak ada perubahan selama 2 detik, atau paling lambat tiap 10 detik saat terus mengetik, atau saat catatan ditutup / aplikasi keluar.
 3. Gabungkan update per dokumen (`yrs::merge_updates_v1`) supaya satu file tidak berisi ratusan potongan kecil.
-4. Tulis ke `upd-<seq>.ichn.tmp` → `fsync` → rename ke `upd-<seq>.ichn` → `next_seq += 1` → hapus baris outbox terkait. Semua dalam urutan ini supaya crash di tengah tidak menghilangkan data.
+4. Tulis ke `upd-<seq>.ntc.tmp` → `fsync` → rename ke `upd-<seq>.ntc` → `next_seq += 1` → hapus baris outbox terkait. Semua dalam urutan ini supaya crash di tengah tidak menghilangkan data.
 
 ### 7.6 Alur baca
 
@@ -509,12 +509,12 @@ pub trait SyncTransport: Send + Sync {
 ### 7.7 Compaction
 
 - Pemicu: perangkat punya lebih dari 200 file update sendiri, atau sudah lebih dari 24 jam sejak compaction terakhir dan ada update baru.
-- Tulis `snap-<seq>.ichn` berisi **state lengkap** semua dokumen workspace sebagaimana diketahui perangkat ini (`encode_state_as_update_v1`), dengan `seq` lebih besar dari semua file sebelumnya.
+- Tulis `snap-<seq>.ntc` berisi **state lengkap** semua dokumen workspace sebagaimana diketahui perangkat ini (`encode_state_as_update_v1`), dengan `seq` lebih besar dari semua file sebelumnya.
 - Setelah snapshot berhasil ditulis, hapus file `upd-*` dan `snap-*` **milik sendiri** yang seq-nya lebih kecil. Tidak pernah menyentuh folder perangkat lain.
 
 ### 7.8 Bergabung ke workspace / perangkat baru
 
-1. Pengguna memilih "Gabung workspace" → pilih folder `Ichnote/<workspace_id>/`.
+1. Pengguna memilih "Gabung workspace" → pilih folder `notetice/<workspace_id>/`.
 2. Aplikasi memvalidasi `workspace.json`, membuat baris `workspaces`, membuat `devices/<device_id>/device.json`.
 3. Baca semua snapshot + update dari semua perangkat (cursor kosong) → bangun dokumen dan indeks lokal.
 
@@ -598,7 +598,7 @@ Catatan Fase 1: UI menampilkan satu workspace ("Personal", dibuat otomatis) dan 
 **Selesai bila:** dari aplikasi apa pun, pintasan → ketik → Enter → catatan tersimpan dalam < 1 detik.
 
 ### Fase 3 — Sinkronisasi folder
-- [ ] Format `.ichn` + parser + tes fuzz
+- [ ] Format `.ntc` + parser + tes fuzz
 - [ ] `FolderTransport`: tulis, baca, compaction
 - [ ] SyncEngine: outbox, cursor, watcher + polling
 - [ ] UI: pilih folder, gabung workspace, status sinkron, daftar perangkat
@@ -624,10 +624,10 @@ Catatan Fase 1: UI menampilkan satu workspace ("Personal", dibuat otomatis) dan 
 
 ## 10. Strategi Pengujian
 
-- **Unit test** `ichnote-core`: migrasi, apply update, rebuild indeks dari dokumen meta.
-- **Tes konvergensi** `ichnote-sync`: simulasikan 2–4 "perangkat" dengan database terpisah dan satu folder sementara (`tempfile`). Lakukan operasi acak (buat, edit, hapus, pindah folder) di setiap perangkat, jalankan sinkron dalam urutan acak, lalu pastikan semua state identik. Gunakan `proptest` untuk menghasilkan skenario.
+- **Unit test** `notetice-core`: migrasi, apply update, rebuild indeks dari dokumen meta.
+- **Tes konvergensi** `notetice-sync`: simulasikan 2–4 "perangkat" dengan database terpisah dan satu folder sementara (`tempfile`). Lakukan operasi acak (buat, edit, hapus, pindah folder) di setiap perangkat, jalankan sinkron dalam urutan acak, lalu pastikan semua state identik. Gunakan `proptest` untuk menghasilkan skenario.
 - **Tes ketahanan**: file setengah tertulis, checksum salah, file `.tmp`, file asing, gap seq, folder hilang di tengah sinkron, crash di antara tulis dan rename.
-- **Fuzz** parser `.ichn` dengan `cargo-fuzz`.
+- **Fuzz** parser `.ntc` dengan `cargo-fuzz`.
 - **Uji manual matriks layanan**: iCloud Drive, Dropbox, Google Drive for desktop (mode stream & mirror), OneDrive, Syncthing — termasuk skenario berbagi folder antar akun.
 
 ---
@@ -660,20 +660,24 @@ Catatan Fase 1: UI menampilkan satu workspace ("Personal", dibuat otomatis) dan 
 
 ## 13. Nama & Identitas
 
-**Ichnote** (dibaca *"ik-nout"*), tagline: *leave a trace.*
+**note-tice!** (dibaca *"notis"*, plesetan dari *notice*), tagline: *take note.*
 
-- **ichno-** — dari bahasa Yunani *ichnos*, "jejak kaki" (akar kata *ichnology*, ilmu tentang jejak dan jejak fosil): catatan sebagai jejak pikiran yang tertinggal dan tersinkron di banyak perangkat.
-- **Ich** — "saya" dalam bahasa Jerman: *Ich + note* = "catatan saya", selaras dengan prinsip bahwa data milik pengguna.
-- **note** — catatan.
+- **note** — catatan; **notice** — "perhatikan": catatan yang minta diperhatikan, ditegaskan oleh tanda seru di nama dan logo.
+- Logo: huruf "N" geometris dengan tanda seru (titiknya berbentuk belah ketupat), krem kertas `#F3F1E5` di atas kotak sudut-bulat hitam `#1E1E1E`. Sumber: `assets/brand/notetice-logo.png`.
+- Karena `!` dan `-` tidak bisa dipakai di semua identifier, slug teknisnya **`notetice`**.
+- Rebrand dari nama lama *Ichnote* (2026-11-20), sebelum ada rilis publik; data lokal lama tidak dimigrasi.
 
 Penamaan teknis:
 
 | Hal | Nilai |
 |---|---|
-| Crate | `ichnote-core`, `ichnote-sync` |
-| Folder sinkron | `<FolderSinkron>/Ichnote/` |
-| Ekstensi file sinkron | `.ichn` |
-| Magic bytes | `ICHN` |
-| Bundle identifier (contoh) | `app.ichnote.desktop` |
+| Crate | `notetice-core`, `notetice-sync` |
+| Folder sinkron | `<FolderSinkron>/notetice/` |
+| Folder data lokal | `<direktori data OS>/Notetice/` |
+| Variabel lingkungan | `NOTETICE_DATA_DIR` |
+| Skema URI lampiran | `ntc://` |
+| Ekstensi file sinkron | `.ntc` |
+| Magic bytes | `NTCE` |
+| Bundle identifier | `app.notetice.desktop` |
 
-Sebelum rilis publik, amankan organisasi GitHub, nama crate/npm, dan domain (`ichnote.app` / `.dev` / `.com`), serta periksa PDKI dan WIPO Global Brand Database.
+Sebelum rilis publik, amankan organisasi GitHub, nama crate/npm, dan domain (`notetice.app` / `.dev` / `.com`), serta periksa PDKI dan WIPO Global Brand Database.

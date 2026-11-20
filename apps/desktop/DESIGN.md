@@ -1,5 +1,5 @@
 ---
-name: Ichnote
+name: note-tice!
 description: Local-first block notes. Leave a trace.
 colors:
   ink: "oklch(0.235 0.035 268)"
@@ -132,7 +132,7 @@ components:
     padding: "0 54px"
 ---
 
-# Design System: Ichnote
+# Design System: note-tice!
 
 ## Overview
 
@@ -192,7 +192,7 @@ Ink on paper: a cool blue-black ink (hue 268) against warm cream stock (hue 95),
 ### Hierarchy
 - **Headline** (650, 32px, 40px): the note title input at the top of the proof sheet.
 - **Title** (600, 17px, 24px, -0.01em): the note-list pane heading (All notes, Trash, folder name).
-- **Wordmark** (500, 17px, 24px, 0.22em): the lowercase "ichnote" wordmark atop the sidebar only.
+- **Wordmark** (500, 17px, 24px, 0.22em): the lowercase "note-tice!" wordmark atop the sidebar only.
 - **Body** (400, 14px, 20px): base UI text: navigation, rows (titles at 500), buttons (500), search.
 - **Body Small** (400, 13px): note-row snippets (two-line clamp) and empty-folder text.
 - **Label** (12px, 16px, tabular numerals): note counts, row dates, row flags, and the "Folders" section heading (600). Sentence case; never uppercase.

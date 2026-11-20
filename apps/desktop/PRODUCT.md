@@ -34,8 +34,8 @@ Notion-like block editing with local-first ownership and serverless folder sync 
 
 ## Brand Commitments
 
-- Name: Ichnote, tagline "leave a trace." Lowercase wordmark "ichnote".
-- Logo: `assets/brand/ichnote-logo.png`, an ink-black serif "I" split by a flowing trace line, on a warm off-white paper ground. UI color derives from this ink-on-paper pairing.
+- Name: note-tice! (slug `notetice`), tagline "take note." Lowercase wordmark "note-tice!".
+- Logo: `assets/brand/notetice-logo.png`, a geometric "N" with an exclamation mark (diamond dot) in paper cream `#F3F1E5` on a near-black `#1E1E1E` rounded square. UI color derives from this ink-on-paper pairing; the amber accent stays.
 
 ## Evidence on Hand
 

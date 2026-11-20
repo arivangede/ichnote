@@ -1,6 +1,6 @@
-# Contributing to Ichnote
+# Contributing to note-tice!
 
-Thanks for your interest! Ichnote is at an early stage, so please open an issue to discuss
+Thanks for your interest! note-tice! is at an early stage, so please open an issue to discuss
 larger changes before starting work.
 
 ## Before you start
@@ -33,12 +33,12 @@ pnpm test
 
 ## Architecture rules
 
-- `crates/ichnote-core` and `crates/ichnote-sync` must not depend on Tauri (CI enforces this).
+- `crates/notetice-core` and `crates/notetice-sync` must not depend on Tauri (CI enforces this).
 - All IDs are UUIDv7. Synced data is never hard-deleted — use tombstones (`deleted_at`).
 - All note and metadata changes go through CRDT documents; SQLite index tables are rebuildable caches.
 - In folder sync, a device writes only inside its own `devices/<device_id>/` folder.
 - Sync file writes are atomic: write `*.tmp` → fsync → rename.
-- The `.ichn` sync format is a public contract: changes require a format version bump and an
+- The `.ntc` sync format is a public contract: changes require a format version bump and an
   update to `docs/sync-format.md`.
 
 ## Code conventions

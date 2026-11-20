@@ -1,8 +1,8 @@
-# Ichnote
+# note-tice!
 
-*leave a trace.*
+*take note.*
 
-Ichnote is a lightweight, local-first, open-source note-taking app with a block editor,
+note-tice! is a lightweight, local-first, open-source note-taking app with a block editor,
 an always-on-top quick window, and serverless sync through a folder you already own
 (iCloud Drive, Dropbox, Google Drive for desktop, OneDrive, Syncthing).
 
@@ -21,8 +21,8 @@ an always-on-top quick window, and serverless sync through a folder you already 
 ## Repository layout
 
 ```
-crates/ichnote-core   data model, SQLite storage, CRDT documents (no Tauri)
-crates/ichnote-sync   sync engine and transports (no Tauri)
+crates/notetice-core   data model, SQLite storage, CRDT documents (no Tauri)
+crates/notetice-sync   sync engine and transports (no Tauri)
 apps/desktop          Tauri v2 app: src-tauri (Rust) + src (React + TypeScript)
 docs/                 design document, ADRs, sync format spec
 ```
