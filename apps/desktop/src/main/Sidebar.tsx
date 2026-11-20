@@ -64,7 +64,7 @@ export function Sidebar(props: SidebarProps) {
       <div className="titlebar-strip" data-tauri-drag-region />
       <div className="brand">
         <span className="brand-mark">
-          <LogoMark size={22} />
+          <LogoMark size={18} />
         </span>
         <span className="brand-name">{props.workspaceName}</span>
       </div>
