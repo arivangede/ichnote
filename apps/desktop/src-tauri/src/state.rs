@@ -4,10 +4,10 @@ use std::path::{Path, PathBuf};
 use std::sync::{Mutex, MutexGuard};
 
 use anyhow::Context;
-use ichnote_core::Store;
+use notetice_core::Store;
 
 /// File name of the database inside the data directory.
-const DB_FILE: &str = "ichnote.db";
+const DB_FILE: &str = "notetice.db";
 /// Backups kept in `<data dir>/backups`.
 const BACKUPS_KEPT: usize = 7;
 /// Name of the workspace created on first run.

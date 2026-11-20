@@ -2,5 +2,5 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 fn main() -> anyhow::Result<()> {
-    ichnote_desktop_lib::run()
+    notetice_desktop_lib::run()
 }

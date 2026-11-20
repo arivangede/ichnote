@@ -21,7 +21,7 @@ const MIGRATIONS: &[&str] = &[
 /// Settings key holding this device's UUIDv7.
 pub const DEVICE_ID_KEY: &str = "device_id";
 
-/// Handle to the local Ichnote database.
+/// Handle to the local note-tice! database.
 ///
 /// All reads and writes of notes, metadata, and the derived indexes go through a `Store`.
 #[derive(Debug)]
@@ -198,7 +198,7 @@ mod tests {
     #[test]
     fn reopen_keeps_device_id_and_is_idempotent() {
         let dir = tempfile::tempdir().unwrap();
-        let path = dir.path().join("ichnote.db");
+        let path = dir.path().join("notetice.db");
         let first = Store::open(&path).unwrap();
         let id = first.device_id();
         assert_eq!(id.get_version_num(), 7);
@@ -211,7 +211,7 @@ mod tests {
     #[test]
     fn newer_schema_is_rejected() {
         let dir = tempfile::tempdir().unwrap();
-        let path = dir.path().join("ichnote.db");
+        let path = dir.path().join("notetice.db");
         drop(Store::open(&path).unwrap());
         let conn = Connection::open(&path).unwrap();
         conn.pragma_update(None, "user_version", 99).unwrap();

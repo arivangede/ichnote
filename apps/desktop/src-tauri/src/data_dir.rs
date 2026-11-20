@@ -7,11 +7,11 @@ use anyhow::Context;
 
 /// Environment variable that overrides the data directory (used to run two instances side by
 /// side when testing folder sync on one machine).
-pub const DATA_DIR_ENV: &str = "ICHNOTE_DATA_DIR";
+pub const DATA_DIR_ENV: &str = "NOTETICE_DATA_DIR";
 
 /// Directory name under the OS data directory
-/// (`~/Library/Application Support/Ichnote` on macOS, `%APPDATA%\Ichnote` on Windows).
-const APP_DIR_NAME: &str = "Ichnote";
+/// (`~/Library/Application Support/Notetice` on macOS, `%APPDATA%\Notetice` on Windows).
+const APP_DIR_NAME: &str = "Notetice";
 
 /// Resolves the data directory from the environment and the OS default.
 pub fn resolve() -> anyhow::Result<PathBuf> {
@@ -46,9 +46,9 @@ mod tests {
     #[test]
     fn empty_env_falls_back_to_os_dir() {
         let dir = resolve_from(Some("".into()), Some("/data".into())).unwrap();
-        assert_eq!(dir, PathBuf::from("/data/Ichnote"));
+        assert_eq!(dir, PathBuf::from("/data/Notetice"));
         let dir = resolve_from(None, Some("/data".into())).unwrap();
-        assert_eq!(dir, PathBuf::from("/data/Ichnote"));
+        assert_eq!(dir, PathBuf::from("/data/Notetice"));
     }
 
     #[test]

@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Ichnote",
+  "productName": "note-tice!",
   "version": "0.1.0",
-  "identifier": "app.ichnote.desktop",
+  "identifier": "app.notetice.desktop",
   "build": {
     "beforeDevCommand": "pnpm dev",
     "devUrl": "http://localhost:1420",
@@ -13,7 +13,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "Ichnote",
+        "title": "note-tice!",
         "url": "/",
         "width": 1100,
         "height": 750,
@@ -29,7 +29,7 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: asset: ichn: http://ichn.localhost; media-src 'self' blob: ichn: http://ichn.localhost; connect-src ipc: http://ipc.localhost ichn: http://ichn.localhost"
+      "csp": "default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: asset: ntc: http://ntc.localhost; media-src 'self' blob: ntc: http://ntc.localhost; connect-src ipc: http://ipc.localhost ntc: http://ntc.localhost"
     }
   },
   "bundle": {

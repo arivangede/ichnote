@@ -1,7 +1,7 @@
 //! Integration tests for workspaces, notes, folders, and document updates.
 #![allow(clippy::unwrap_used)]
 
-use ichnote_core::{NoteFilter, NotePatch, Store};
+use notetice_core::{NoteFilter, NotePatch, Store};
 use uuid::Uuid;
 use yrs::types::xml::XmlFragment;
 use yrs::updates::decoder::Decode;
@@ -42,7 +42,7 @@ fn fts_body(store_path: &std::path::Path, note: Uuid) -> String {
     .unwrap()
 }
 
-fn ids(notes: &[ichnote_core::NoteMeta]) -> Vec<Uuid> {
+fn ids(notes: &[notetice_core::NoteMeta]) -> Vec<Uuid> {
     notes.iter().map(|n| n.id).collect()
 }
 
@@ -146,7 +146,7 @@ fn deleting_a_folder_keeps_its_notes() {
 #[test]
 fn editor_updates_are_stored_and_indexed() {
     let dir = tempfile::tempdir().unwrap();
-    let path = dir.path().join("ichnote.db");
+    let path = dir.path().join("notetice.db");
     let mut store = Store::open(&path).unwrap();
     let ws = store.create_workspace("Personal").unwrap().id;
     let note = store.create_note(ws, None, false).unwrap();
@@ -184,7 +184,7 @@ fn invalid_updates_are_rejected_without_changes() {
 #[test]
 fn data_survives_reopen_without_clean_shutdown() {
     let dir = tempfile::tempdir().unwrap();
-    let path = dir.path().join("ichnote.db");
+    let path = dir.path().join("notetice.db");
     let (ws, note) = {
         let mut store = Store::open(&path).unwrap();
         let ws = store.create_workspace("Personal").unwrap().id;
@@ -213,7 +213,7 @@ fn data_survives_reopen_without_clean_shutdown() {
 #[test]
 fn rebuilt_index_matches_incremental_index() {
     let dir = tempfile::tempdir().unwrap();
-    let path = dir.path().join("ichnote.db");
+    let path = dir.path().join("notetice.db");
     let mut store = Store::open(&path).unwrap();
     let ws = store.create_workspace("Personal").unwrap().id;
     let folder = store.create_folder(ws, "F", None).unwrap();
@@ -272,7 +272,7 @@ fn content_edits_bump_updated_at_at_most_once_a_minute() {
 #[test]
 fn unsynced_workspaces_do_not_fill_the_outbox() {
     let dir = tempfile::tempdir().unwrap();
-    let path = dir.path().join("ichnote.db");
+    let path = dir.path().join("notetice.db");
     let mut store = Store::open(&path).unwrap();
     let ws = store.create_workspace("Personal").unwrap().id;
     let note = store.create_note(ws, None, false).unwrap();

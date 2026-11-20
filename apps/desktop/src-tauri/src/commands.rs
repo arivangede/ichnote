@@ -3,8 +3,8 @@
 use std::collections::BTreeMap;
 use std::path::PathBuf;
 
-use ichnote_core::export::ExportFile;
-use ichnote_core::{Attachment, Folder, NoteFilter, NoteMeta, NotePatch, SearchHit, Workspace};
+use notetice_core::export::ExportFile;
+use notetice_core::{Attachment, Folder, NoteFilter, NoteMeta, NotePatch, SearchHit, Workspace};
 use serde::{Deserialize, Serialize};
 use tauri::ipc::{InvokeBody, Request, Response};
 use tauri::{AppHandle, Emitter, State};
@@ -13,14 +13,14 @@ use uuid::Uuid;
 use crate::state::AppState;
 
 /// Header carrying the document ID for binary `apply_local_update` requests.
-pub const DOC_ID_HEADER: &str = "ichnote-doc-id";
+pub const DOC_ID_HEADER: &str = "notetice-doc-id";
 /// Settings that the frontend may not change.
-const READ_ONLY_SETTINGS: &[&str] = &[ichnote_core::db::DEVICE_ID_KEY];
+const READ_ONLY_SETTINGS: &[&str] = &[notetice_core::db::DEVICE_ID_KEY];
 const DEFAULT_SEARCH_LIMIT: u32 = 50;
 /// Headers of a binary `save_attachment` request.
-pub const WORKSPACE_ID_HEADER: &str = "ichnote-workspace-id";
-pub const FILE_NAME_HEADER: &str = "ichnote-file-name";
-pub const MIME_HEADER: &str = "ichnote-mime";
+pub const WORKSPACE_ID_HEADER: &str = "notetice-workspace-id";
+pub const FILE_NAME_HEADER: &str = "notetice-file-name";
+pub const MIME_HEADER: &str = "notetice-mime";
 /// Largest attachment accepted (bytes).
 const MAX_ATTACHMENT_BYTES: usize = 256 * 1024 * 1024;
 
@@ -65,7 +65,7 @@ pub struct AppInfo {
 #[tauri::command]
 pub fn app_info(state: State<'_, AppState>) -> AppInfo {
     AppInfo {
-        version: ichnote_core::VERSION,
+        version: notetice_core::VERSION,
         data_dir: state.data_dir().to_owned(),
         device_id: state.store().device_id(),
     }
@@ -318,8 +318,8 @@ pub async fn write_export_files(
             .collect::<CmdResult<Vec<_>>>()?
     };
     let written = tauri::async_runtime::spawn_blocking(move || {
-        ichnote_core::export::copy_files(&dir, &copies)?;
-        ichnote_core::export::write_files(&dir, &files)
+        notetice_core::export::copy_files(&dir, &copies)?;
+        notetice_core::export::write_files(&dir, &files)
     })
     .await??;
     Ok(written.len())

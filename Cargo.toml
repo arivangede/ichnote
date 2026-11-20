@@ -6,11 +6,11 @@ members = ["crates/*", "apps/desktop/src-tauri"]
 version = "0.1.0"
 edition = "2024"
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/arivangede/ichnote"
-authors = ["Ichnote contributors"]
+repository = "https://github.com/arivangede/notetice"
+authors = ["note-tice! contributors"]
 
 [workspace.dependencies]
-ichnote-core = { path = "crates/ichnote-core" }
+notetice-core = { path = "crates/notetice-core" }
 anyhow = "1.0.104"
 blake3 = "1.8.7"
 dirs = "7.0.0"

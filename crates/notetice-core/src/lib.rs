@@ -1,4 +1,4 @@
-//! Core of Ichnote: data model, local SQLite storage, and CRDT documents.
+//! Core of note-tice!: data model, local SQLite storage, and CRDT documents.
 //!
 //! This crate must not depend on Tauri so it can be tested on its own.
 

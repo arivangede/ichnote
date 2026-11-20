@@ -4,7 +4,7 @@
 import * as Y from "yjs";
 import { applyLocalUpdate, loadDoc, type NoteMeta, type Uuid } from "./ipc";
 
-/** Name of the XmlFragment BlockNote binds to; must match NOTE_FRAGMENT in ichnote-core. */
+/** Name of the XmlFragment BlockNote binds to; must match NOTE_FRAGMENT in notetice-core. */
 export const NOTE_FRAGMENT = "document-store";
 export const REMOTE_ORIGIN = "remote";
 const LOAD_ORIGIN = "load";

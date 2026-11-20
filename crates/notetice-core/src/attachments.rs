@@ -17,8 +17,8 @@ use crate::docs::parse_uuid;
 use crate::error::{Error, Result};
 use crate::ids::{new_id, now_ms};
 
-/// Prefix of the URL stored in notes for an attachment: `ichnote-attachment:<id>`.
-pub const URL_PREFIX: &str = "ichnote-attachment:";
+/// Prefix of the URL stored in notes for an attachment: `notetice-attachment:<id>`.
+pub const URL_PREFIX: &str = "notetice-attachment:";
 
 /// Metadata of a stored attachment.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize)]
@@ -191,7 +191,7 @@ mod tests {
     #[test]
     fn saves_dedupes_and_reads_back() {
         let dir = tempfile::tempdir().unwrap();
-        let mut store = Store::open(dir.path().join("ichnote.db")).unwrap();
+        let mut store = Store::open(dir.path().join("notetice.db")).unwrap();
         let ws = store.create_workspace("Personal").unwrap().id;
 
         let a = store
@@ -203,7 +203,7 @@ mod tests {
         assert_ne!(a.id, b.id);
         assert_eq!(a.hash, b.hash);
         assert_eq!(b.mime, "image/png");
-        assert_eq!(a.url(), format!("ichnote-attachment:{}", a.id));
+        assert_eq!(a.url(), format!("notetice-attachment:{}", a.id));
 
         let (meta, path) = store.attachment(a.id).unwrap();
         assert_eq!(meta, a);
@@ -240,7 +240,7 @@ mod tests {
     #[test]
     fn unknown_workspace_is_rejected() {
         let dir = tempfile::tempdir().unwrap();
-        let mut store = Store::open(dir.path().join("ichnote.db")).unwrap();
+        let mut store = Store::open(dir.path().join("notetice.db")).unwrap();
         assert!(
             store
                 .save_attachment(Uuid::now_v7(), "a", "text/plain", b"x")

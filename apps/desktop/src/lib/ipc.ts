@@ -1,5 +1,5 @@
 // Typed wrappers around Tauri commands. Every frontend call into Rust goes through here.
-// Types mirror the serde types in crates/ichnote-core and apps/desktop/src-tauri/src/commands.rs.
+// Types mirror the serde types in crates/notetice-core and apps/desktop/src-tauri/src/commands.rs.
 import { invoke } from "@tauri-apps/api/core";
 import { listen, type UnlistenFn } from "@tauri-apps/api/event";
 
@@ -86,7 +86,7 @@ export interface ExportFile {
 }
 
 /** Header carrying the document ID of a binary `apply_local_update` request. */
-export const DOC_ID_HEADER = "ichnote-doc-id";
+export const DOC_ID_HEADER = "notetice-doc-id";
 
 export function getAppInfo(): Promise<AppInfo> {
   return invoke<AppInfo>("app_info");
@@ -183,9 +183,9 @@ export async function saveAttachment(workspaceId: Uuid, file: File): Promise<Att
   const bytes = new Uint8Array(await file.arrayBuffer());
   return invoke<Attachment>("save_attachment", bytes, {
     headers: {
-      "ichnote-workspace-id": workspaceId,
-      "ichnote-file-name": encodeURIComponent(file.name),
-      "ichnote-mime": file.type || "application/octet-stream",
+      "notetice-workspace-id": workspaceId,
+      "notetice-file-name": encodeURIComponent(file.name),
+      "notetice-mime": file.type || "application/octet-stream",
     },
   });
 }

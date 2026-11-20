@@ -37,8 +37,8 @@ jobs:
       - run: cargo test --workspace
       - name: Core crates must not depend on Tauri
         run: |
-          if cargo tree -p ichnote-core -p ichnote-sync -e normal,build --prefix none | grep -i '^tauri'; then
-            echo "::error::ichnote-core / ichnote-sync must not depend on Tauri"
+          if cargo tree -p notetice-core -p notetice-sync -e normal,build --prefix none | grep -i '^tauri'; then
+            echo "::error::notetice-core / notetice-sync must not depend on Tauri"
             exit 1
           fi
 
@@ -64,7 +64,7 @@ jobs:
       - run: pnpm tauri build --bundles app,dmg
       - uses: actions/upload-artifact@v7
         with:
-          name: ichnote-macos
+          name: notetice-macos
           path: |
             target/release/bundle/macos/*.app
             target/release/bundle/dmg/*.dmg

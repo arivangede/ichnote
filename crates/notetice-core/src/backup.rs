@@ -7,11 +7,11 @@ use crate::db::Store;
 use crate::error::Result;
 use crate::ids::now_ms;
 
-const PREFIX: &str = "ichnote-";
+const PREFIX: &str = "notetice-";
 const SUFFIX: &str = ".db";
 const DAY_MS: i64 = 24 * 60 * 60 * 1000;
 
-/// Parses the unix-ms timestamp out of a backup file name (`ichnote-<unix_ms>.db`).
+/// Parses the unix-ms timestamp out of a backup file name (`notetice-<unix_ms>.db`).
 fn backup_time(path: &Path) -> Option<i64> {
     path.file_name()?
         .to_str()?
@@ -80,7 +80,7 @@ mod tests {
     #[test]
     fn backups_are_daily_restorable_and_rotated() {
         let dir = tempfile::tempdir().unwrap();
-        let mut store = Store::open(dir.path().join("ichnote.db")).unwrap();
+        let mut store = Store::open(dir.path().join("notetice.db")).unwrap();
         store.create_workspace("Personal").unwrap();
         let backups = dir.path().join("backups");
 
@@ -89,7 +89,7 @@ mod tests {
         let now = 100 * DAY_MS;
         for day in 1..=8 {
             fs::write(
-                backups.join(format!("ichnote-{}.db", now - day * DAY_MS)),
+                backups.join(format!("notetice-{}.db", now - day * DAY_MS)),
                 b"",
             )
             .unwrap();

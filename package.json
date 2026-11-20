@@ -1,11 +1,11 @@
 {
-  "name": "ichnote",
+  "name": "notetice",
   "private": true,
   "license": "MIT OR Apache-2.0",
   "scripts": {
-    "tauri": "pnpm --filter @ichnote/desktop tauri",
-    "dev": "pnpm --filter @ichnote/desktop dev",
-    "build": "pnpm --filter @ichnote/desktop build",
+    "tauri": "pnpm --filter @notetice/desktop tauri",
+    "dev": "pnpm --filter @notetice/desktop dev",
+    "build": "pnpm --filter @notetice/desktop build",
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
     "lint": "biome check .",

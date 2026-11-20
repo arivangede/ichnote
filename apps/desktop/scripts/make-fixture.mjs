@@ -1,4 +1,4 @@
-// Generates a BlockNote-produced Yjs note document used by the Rust tests in ichnote-core.
+// Generates a BlockNote-produced Yjs note document used by the Rust tests in notetice-core.
 // Run from apps/desktop: `node scripts/make-fixture.mjs`.
 import { writeFileSync } from "node:fs";
 import { BlockNoteEditor } from "@blocknote/core";
@@ -29,7 +29,7 @@ const doc = blocksToYDoc(
   "document-store",
 );
 const out = new URL(
-  "../../../crates/ichnote-core/tests/fixtures/blocknote-note.bin",
+  "../../../crates/notetice-core/tests/fixtures/blocknote-note.bin",
   import.meta.url,
 );
 writeFileSync(out, Y.encodeStateAsUpdate(doc));

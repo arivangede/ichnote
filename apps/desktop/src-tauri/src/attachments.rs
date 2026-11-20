@@ -1,7 +1,7 @@
-//! Serving attachment files to the webview through the `ichn` URI scheme.
+//! Serving attachment files to the webview through the `ntc` URI scheme.
 //!
-//! Notes store `ichnote-attachment:<id>`; the frontend turns that into the platform URL for this
-//! scheme (`ichn://localhost/<id>` on macOS/Linux, `http://ichn.localhost/<id>` on Windows).
+//! Notes store `notetice-attachment:<id>`; the frontend turns that into the platform URL for this
+//! scheme (`ntc://localhost/<id>` on macOS/Linux, `http://ntc.localhost/<id>` on Windows).
 //! Range requests are supported so audio and video can play and seek.
 
 use std::fs::File;
@@ -14,7 +14,7 @@ use uuid::Uuid;
 use crate::state::AppState;
 
 /// URI scheme name; must match `ATTACHMENT_PROTOCOL` in `src/lib/attachments.ts`.
-pub const SCHEME: &str = "ichn";
+pub const SCHEME: &str = "ntc";
 
 /// Decodes a `%XX`-encoded string (as produced by `encodeURIComponent`).
 pub fn percent_decode(s: &str) -> Option<String> {
@@ -160,7 +160,7 @@ mod tests {
             .save_attachment(ws, "clip.mp4", "video/mp4", b"0123456789")
             .unwrap();
         let get = |range: Option<&str>| {
-            let mut b = Request::builder().uri(format!("ichn://localhost/{}", a.id));
+            let mut b = Request::builder().uri(format!("ntc://localhost/{}", a.id));
             if let Some(r) = range {
                 b = b.header(header::RANGE, r);
             }
@@ -180,7 +180,7 @@ mod tests {
         );
 
         let missing = Request::builder()
-            .uri(format!("ichn://localhost/{}", Uuid::now_v7()))
+            .uri(format!("ntc://localhost/{}", Uuid::now_v7()))
             .body(Vec::new())
             .unwrap();
         assert_eq!(serve(&state, &missing).status(), StatusCode::NOT_FOUND);

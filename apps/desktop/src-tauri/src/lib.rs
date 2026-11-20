@@ -1,4 +1,4 @@
-//! Application layer of Ichnote: Tauri setup, commands, windows.
+//! Application layer of note-tice!: Tauri setup, commands, windows.
 
 mod attachments;
 mod commands;
@@ -18,7 +18,7 @@ fn init_tracing() {
 /// Builds and runs the Tauri application.
 pub fn run() -> anyhow::Result<()> {
     init_tracing();
-    tracing::info!(version = ichnote_core::VERSION, "starting Ichnote");
+    tracing::info!(version = notetice_core::VERSION, "starting note-tice!");
     let data_dir = data_dir::resolve()?;
 
     tauri::Builder::default()

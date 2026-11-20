@@ -1527,46 +1527,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "ichnote-core"
-version = "0.1.0"
-dependencies = [
- "blake3",
- "rusqlite",
- "serde",
- "serde_json",
- "tempfile",
- "thiserror 2.0.21",
- "tracing",
- "uuid",
- "yrs",
-]
-
-[[package]]
-name = "ichnote-desktop"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "dirs",
- "ichnote-core",
- "serde",
- "tauri",
- "tauri-build",
- "tauri-plugin-dialog",
- "tempfile",
- "tracing",
- "tracing-subscriber",
- "uuid",
-]
-
-[[package]]
-name = "ichnote-sync"
-version = "0.1.0"
-dependencies = [
- "ichnote-core",
- "thiserror 2.0.21",
-]
-
-[[package]]
 name = "ico"
 version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2139,6 +2099,46 @@ name = "new_debug_unreachable"
 version = "1.0.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "650eef8c711430f1a879fdd01d4745a7deea475becfb90269c06775983bbf086"
+
+[[package]]
+name = "notetice-core"
+version = "0.1.0"
+dependencies = [
+ "blake3",
+ "rusqlite",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "thiserror 2.0.21",
+ "tracing",
+ "uuid",
+ "yrs",
+]
+
+[[package]]
+name = "notetice-desktop"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "dirs",
+ "notetice-core",
+ "serde",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-dialog",
+ "tempfile",
+ "tracing",
+ "tracing-subscriber",
+ "uuid",
+]
+
+[[package]]
+name = "notetice-sync"
+version = "0.1.0"
+dependencies = [
+ "notetice-core",
+ "thiserror 2.0.21",
+]
 
 [[package]]
 name = "nu-ansi-term"

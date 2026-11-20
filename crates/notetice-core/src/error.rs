@@ -1,13 +1,13 @@
-//! Error type for `ichnote-core`.
+//! Error type for `notetice-core`.
 
-/// Errors produced by `ichnote-core`.
+/// Errors produced by `notetice-core`.
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
     /// An SQLite operation failed.
     #[error("database error: {0}")]
     Sqlite(#[from] rusqlite::Error),
 
-    /// The database was created by a newer version of Ichnote.
+    /// The database was created by a newer version of note-tice!.
     #[error("database schema version {found} is newer than the supported version {supported}")]
     SchemaTooNew {
         /// Version found in the database.
@@ -38,5 +38,5 @@ pub enum Error {
     Io(#[from] std::io::Error),
 }
 
-/// Convenience result type for `ichnote-core`.
+/// Convenience result type for `notetice-core`.
 pub type Result<T> = std::result::Result<T, Error>;

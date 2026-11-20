@@ -309,7 +309,7 @@ export function MainWindow() {
       const states = new Map<string, Uint8Array>();
       for (const n of all) states.set(n.id, await loadDoc(n.id));
       const day = new Date().toISOString().slice(0, 10);
-      const root = `Ichnote export ${day}`;
+      const root = `notetice export ${day}`;
       const files = workspaceExportFiles(all, folders, states, root);
       const ids = referencedAttachments(files.map((f) => f.contents).join("\n"));
       const linked = linkAttachments(files, ids.length > 0 ? await getAttachments(ids) : [], root);

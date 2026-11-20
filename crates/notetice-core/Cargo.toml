@@ -1,6 +1,6 @@
 [package]
-name = "ichnote-core"
-description = "Data model, local storage, and CRDT documents for Ichnote"
+name = "notetice-core"
+description = "Data model, local storage, and CRDT documents for note-tice!"
 version.workspace = true
 edition.workspace = true
 license.workspace = true

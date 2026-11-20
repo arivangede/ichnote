@@ -1,11 +1,11 @@
 // Attachments in notes. Note content stores a stable, platform-independent URL
-// (`ichnote-attachment:<id>`); for display it is mapped to the `ichn` URI scheme served by Rust.
+// (`notetice-attachment:<id>`); for display it is mapped to the `ntc` URI scheme served by Rust.
 import { convertFileSrc } from "@tauri-apps/api/core";
 import type { Attachment, Uuid } from "./ipc";
 
-export const ATTACHMENT_URL_PREFIX = "ichnote-attachment:";
+export const ATTACHMENT_URL_PREFIX = "notetice-attachment:";
 /** Must match `SCHEME` in src-tauri/src/attachments.rs. */
-export const ATTACHMENT_PROTOCOL = "ichn";
+export const ATTACHMENT_PROTOCOL = "ntc";
 
 const ID_PATTERN = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
 
